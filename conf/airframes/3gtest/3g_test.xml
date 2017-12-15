@@ -1,14 +1,14 @@
 <!DOCTYPE airframe SYSTEM "../airframe.dtd">
 
-<!-- this is a quadrotor frame equiped with
-     * Autopilot:   Lisa/M 2.0             http://wiki.paparazziuav.org/wiki/Lisa/M_v20
-     * IMU:         Aspirin 2.2            http://wiki.paparazziuav.org/wiki/AspirinIMU
-     * Actuators:   PWM motor controllers  http://wiki.paparazziuav.org/wiki/Subsystem/actuators#PWM_Supervision
-     * GPS:         Ublox                  http://wiki.paparazziuav.org/wiki/Subsystem/gps
-     * RC:          two Spektrum sats      http://wiki.paparazziuav.org/wiki/Subsystem/radio_control#Spektrum
+<!-- this is a quadrotor frame in X-configuration equiped with
+     * Autopilot:   Lisa/MX 2.1 with STM32F4  http://wiki.paparazziuav.org/wiki/Lisa/M_v21
+     * IMU:         Integrated Aspirin 2.2    http://wiki.paparazziuav.org/wiki/AspirinIMU
+     * Actuators:   PWM motor controllers     http://wiki.paparazziuav.org/wiki/Subsystem/actuators#PWM
+     * GPS:         Ublox                     http://wiki.paparazziuav.org/wiki/Subsystem/gps
+     * RC:          two Spektrum sats         http://wiki.paparazziuav.org/wiki/Subsystem/radio_control#Spektrum
 -->
 
-<airframe name="Quadrotor LisaM_2.0 pwm">
+<airframe name="3g test LisaMX_2.1">
 
   <firmware name="rotorcraft">
     <target name="ap" board="lisa_mx_2.1">
@@ -21,39 +21,46 @@
 
     <module name="radio_control" type="spektrum">
       <define name="RADIO_MODE" value="RADIO_AUX1"/>
-      <configure name="USE_SECONDARY_SPEKTRUM_RECEIVER" value="1"/>
     </module>
 
     <module name="motor_mixing"/>
     <module name="actuators"     type="pwm">
       <define name="SERVO_HZ" value="400"/>
-      <!--define name="USE_SERVOS_7AND8"/-->
     </module>
 
     <module name="telemetry"     type="transparent"/>
-    <module name="imu"           type="aspirin_v2.2"/>
+    <module name="imu"           type="lisa_mx_v2.1"/>
     <module name="gps"           type="ublox"/>
-    <module name="stabilization" type="int_quat"/>
-    <module name="ahrs"          type="int_cmpl_quat">
-      <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="30"/>
+    <module name="gps" type="piksi">
+      <configure name="PIKSI_GPS_PORT" value="UART5"/>
+      <configure name="SECONDARY_GPS" value="piksi"/>
     </module>
-    <module name="ins"/>
+    <module name="stabilization" type="int_quat"/>
+    <module name="stabilization" type="rate"/>
+    <module name="ahrs"          type="float_mlkf">
+	    <!-- Uncomment to enable all axis update from the Magnetometer. Do
+		 it only if you have a very well calibrated and tested
+		 magnetometer otherwise your attitude will drift. -->
+	    <!--define name="AHRS_MAG_UPDATE_ALL_AXES" value="1"/-->
+    </module>
+    <module name="ins" type="hff"/>
 
     <!--define name="KILL_ON_GROUND_DETECT" value="TRUE"/-->
   </firmware>
 
-  <servos driver="Pwm">
-    <servo name="FRONT"   no="0" min="1000" neutral="1100" max="1900"/>
-    <servo name="BACK"    no="1" min="1000" neutral="1100" max="1900"/>
-    <servo name="RIGHT"   no="2" min="1000" neutral="1100" max="1900"/>
-    <servo name="LEFT"    no="3" min="1000" neutral="1100" max="1900"/>
-  </servos>
 
-  <modules>
+  <!--<modules>
     <module name="gps" type="ubx_ucenter"/>
     <module name="geo_mag"/>
     <module name="air_data"/>
-  </modules>
+  </modules>-->
+
+  <servos driver="Pwm">
+    <servo name="FL" no="0" min="1000" neutral="1100" max="1900"/>
+    <servo name="FR" no="1" min="1000" neutral="1100" max="1900"/>
+    <servo name="BR" no="2" min="1000" neutral="1100" max="1900"/>
+    <servo name="BL" no="3" min="1000" neutral="1100" max="1900"/>
+  </servos>
 
   <commands>
     <axis name="ROLL"   failsafe_value="0"/>
@@ -63,16 +70,16 @@
   </commands>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
-    <!-- front (CW), right (CCW), back (CW), left (CCW) -->
-    <define name="TYPE" value="QUAD_PLUS"/>
+    <!-- front left (CW), front right (CCW), back right (CW), back left (CCW) -->
+    <define name="TYPE" value="QUAD_X"/>
   </section>
 
   <command_laws>
     <call fun="motor_mixing_run(autopilot_get_motors_on(),FALSE,values)"/>
-    <set servo="FRONT" value="motor_mixing.commands[MOTOR_FRONT]"/>
-    <set servo="RIGHT" value="motor_mixing.commands[MOTOR_RIGHT]"/>
-    <set servo="BACK"  value="motor_mixing.commands[MOTOR_BACK]"/>
-    <set servo="LEFT"  value="motor_mixing.commands[MOTOR_LEFT]"/>
+    <set servo="FL" value="motor_mixing.commands[MOTOR_FRONT_LEFT]"/>
+    <set servo="FR" value="motor_mixing.commands[MOTOR_FRONT_RIGHT]"/>
+    <set servo="BR" value="motor_mixing.commands[MOTOR_BACK_RIGHT]"/>
+    <set servo="BL" value="motor_mixing.commands[MOTOR_BACK_LEFT]"/>
   </command_laws>
 
   <section name="IMU" prefix="IMU_">
@@ -95,13 +102,28 @@
 
   <section name="AHRS" prefix="AHRS_">
     <!-- values used if no GPS fix, on 3D fix is update by geo_mag module -->
-    <!-- Toulouse -->
-    <define name="H_X" value="0.513081"/>
-    <define name="H_Y" value="-0.00242783"/>
-    <define name="H_Z" value="0.858336"/>
+    <define name="H_X" value="0.3770441"/>
+    <define name="H_Y" value="0.0193986"/>
+    <define name="H_Z" value="0.9259921"/>
   </section>
 
-  <section name="INS" prefix="INS_">
+  <section name="STABILIZATION_RATE" prefix="STABILIZATION_RATE_">
+    <!-- setpoints -->
+    <define name="SP_MAX_P" value="140" unit="deg/s"/>
+    <define name="SP_MAX_Q" value="140" unit="deg/s"/>
+    <define name="SP_MAX_R" value="140" unit="deg/s"/>
+    <define name="DEADBAND_P" value="20"/>
+    <define name="DEADBAND_Q" value="20"/>
+    <define name="DEADBAND_R" value="200"/>
+
+    <!-- feedback -->
+    <define name="GAIN_P" value="800"/>
+    <define name="GAIN_Q" value="800"/>
+    <define name="GAIN_R" value="700"/>
+
+    <define name="IGAIN_P" value="240"/>
+    <define name="IGAIN_Q" value="240"/>
+    <define name="IGAIN_R" value="160"/>
   </section>
 
   <section name="STABILIZATION_ATTITUDE" prefix="STABILIZATION_ATTITUDE_">
@@ -165,13 +187,9 @@
     <define name="IGAIN" value="20"/>
   </section>
 
-  <section name="NAV">
-    <define name="ARRIVED_AT_WAYPOINT" value="2" unit="m"/>
-  </section>
-
   <section name="SIMULATOR" prefix="NPS_">
-    <define name="ACTUATOR_NAMES"  value="front_motor, right_motor, back_motor, left_motor" type="string[]"/>
-    <define name="JSBSIM_MODEL" value="simple_quad" type="string"/>
+    <define name="ACTUATOR_NAMES" value="nw_motor, ne_motor, se_motor, sw_motor" type="string[]"/>
+    <define name="JSBSIM_MODEL" value="simple_x_quad_ccw" type="string"/>
     <define name="SENSORS_PARAMS" value="nps_sensors_params_default.h" type="string"/>
     <!-- mode switch on joystick channel 5 (axis numbering starting at zero) -->
     <define name="JS_AXIS_MODE" value="4"/>
@@ -188,7 +206,6 @@
     <define name="CRITIC_BAT_LEVEL" value="9.6" unit="V"/>
     <define name="LOW_BAT_LEVEL" value="10.1" unit="V"/>
     <define name="MAX_BAT_LEVEL" value="12.4" unit="V"/>
-    <define name="MILLIAMP_AT_FULL_THROTTLE" value="30000"/>
   </section>
 
 </airframe>

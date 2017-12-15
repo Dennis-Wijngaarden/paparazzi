@@ -31,6 +31,7 @@
    settings="settings/fixedwing_basic.xml settings/nps.xml"
    settings_modules="modules/nav_basic_fw.xml modules/gps.xml modules/ahrs_float_dcm.xml modules/imu_common.xml modules/guidance_basic_fw.xml modules/stabilization_attitude_fw.xml"
    gui_color="blue"
+   release=""
   />
   <aircraft
    name="Bumblebee_Quad"
@@ -141,6 +142,7 @@
    settings="settings/rotorcraft_basic.xml settings/nps.xml"
    settings_modules="modules/air_data.xml modules/geo_mag.xml modules/gps_ubx_ucenter.xml modules/ahrs_float_mlkf.xml modules/stabilization_rate.xml modules/stabilization_int_quat.xml modules/nav_basic_rotorcraft.xml modules/guidance_rotorcraft.xml modules/gps.xml modules/imu_common.xml"
    gui_color="blue"
+   release=""
   />
   <aircraft
    name="Quad_LisaM_2"
@@ -152,6 +154,7 @@
    settings="settings/rotorcraft_basic.xml settings/nps.xml"
    settings_modules="modules/air_data.xml modules/geo_mag.xml modules/gps_ubx_ucenter.xml modules/ahrs_int_cmpl_quat.xml modules/stabilization_int_quat.xml modules/nav_basic_rotorcraft.xml modules/guidance_rotorcraft.xml modules/gps.xml modules/imu_common.xml"
    gui_color="white"
+   release=""
   />
   <aircraft
    name="Quad_LisaS"
@@ -339,5 +342,6 @@
    settings="settings/setup_actuators.xml"
    settings_modules=""
    gui_color="blue"
+   release=""
   />
 </conf>

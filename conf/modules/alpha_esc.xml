@@ -1,0 +1,16 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="alpha_esc">
+  <doc>
+    <description>Converts telemtry data from t motor alpha esc to the autopilot (and groundstation)</description>
+  </doc>
+  <header>
+    <file name="alpha_esc.h"/>
+  </header>
+  <init fun="alpha_esc_init()"/>
+  <event fun="alpha_esc_event()"/>
+  <makefile>
+    <file name="alpha_esc.c"/>
+  </makefile>
+</module>
+

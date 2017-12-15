@@ -25,7 +25,7 @@
   </description>
   
   <firmware name="rotorcraft">
-    <target name="ap" board="lisa_mxs_1.0">
+    <target name="ap" board="lisa_mx_2.1">
       <define name="REMAP_UART3" value="TRUE" />
       <define name="USE_PERSISTENT_SETTINGS" value="TRUE"/>
     </target>

@@ -36,14 +36,17 @@
   </firmware>
 
   <modules main_freq="512">
-    <module name="geo_mag"/>
+    <!--  <module name="geo_mag"/> -->
     <module name="air_data"/>
-    <module name="send_imu_mag_current"/>
+    <!--  <module name="send_imu_mag_current"/> -->
+    <module name="jevois">
+    	<define name="PERIODIC_TELEMETRY" value="1"/>
+    </module>
     <!--module name="logger_file">
       <define name="FILE_LOGGER_PATH" value="/data/ftp/internal_000"/>
     </module-->
 
-    <module name="video_thread"/>
+    <!--<module name="video_thread"/>
 
     <module name="video_rtp_stream">
       <define name="VIEWVIDEO_CAMERA" value="bottom_camera"/>
@@ -52,7 +55,7 @@
       <define name="VIEWVIDEO_QUALITY_FACTOR" value="40"/>
     </module>
 
-    <module name="bebop_ae_awb"/>
+    <module name="bebop_ae_awb"/> -->
 
   </modules>
 
