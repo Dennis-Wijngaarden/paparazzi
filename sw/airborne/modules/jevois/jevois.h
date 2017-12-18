@@ -31,24 +31,21 @@
 #include "std.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "generated/airframe.h"
 #include "pprzlink/pprz_transport.h"
 
-
-/* Main jevois structure */
-struct jevois_t {
-  struct link_device *device;           ///< The device which is uses for communication
-  struct pprz_transport transport;      ///< The transport layer (PPRZ)
-  bool msg_available;                 ///< If we received a message
-};
+/* georeference module */
+extern void georeference_init(void);
+extern void georeference_run(void);
 
 /* Camera frame structure */
 struct camera_frame_jevois_t {
-	int32_t w;
-	int32_t h;
-	int32_t f;
-	int32_t px;
-	int32_t py;
+	int32_t w;     ///< Frame width [px]
+	int32_t h;     ///< Frame height [px]
+	int32_t f;     ///< Camera Focal length in [px]
+	int32_t px;    ///< Target pixel coordinate (left = 0)
+	int32_t py;    ///< Target pixel coordinate (top = 0)
 };
 
 /* Georeference structure */
@@ -57,8 +54,15 @@ struct georeference_jevois_t {
   struct Int32Vect3 target_l;   ///< Target in meters, relative to the drone in LTP frame
 
   struct Int32Vect3 x_t;        ///< Target coordinates NED
+};
 
-  struct georeference_filter_t filter;  ///< Filter waypoint location
+void georeference_project(struct camera_frame_jevois_t *tar, int wp);
+
+/* Main jevois structure */
+struct jevois_t {
+  struct link_device *device;           ///< The device which is uses for communication
+  struct pprz_transport transport;      ///< The transport layer (PPRZ)
+  bool msg_available;                 ///< If we received a message
 };
 
 /* Data structure */
