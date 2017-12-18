@@ -113,7 +113,7 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
 
   // Camera <-> Body
   // Looking down in body frame
-  // Bebop has 180deg Z rotation in camera (butt up yields normal webcam)
+  // Bebop has 180deg z rotation but jevois has not so no minus before first two 1's, this rotation can be eliminated if it works as cam and body frame are equal in case of jevois
   struct Int32RMat body_to_cam_rmat;
   INT32_MAT33_ZERO(body_to_cam_rmat);
   MAT33_ELMT(body_to_cam_rmat, 0, 0) = 1 << INT32_TRIG_FRAC;
