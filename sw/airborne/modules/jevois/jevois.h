@@ -58,7 +58,7 @@ struct georeference_jevois_t {
 
   struct Int32Vect3 x_t;        ///< Target coordinates NED
 
-  struct georeference_filter_t filter;  ///< Filter waypoint location
+// struct georeference_filter_t filter;  ///< Filter waypoint location
 };
 
 /* Data structure */
