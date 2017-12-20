@@ -1377,6 +1377,8 @@
     <message name="JEVOIS_DATA" id="167">
     	<field name="x"	type="int16"/>
     	<field name="y"	type="int16"/>
+    	<field name="px" type = "int32"/>
+    	<field name="py" type = "int32"/>
     </message>
 
     <message name="ROTORCRAFT_CAM" id="168">
