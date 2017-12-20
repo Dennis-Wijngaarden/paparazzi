@@ -200,6 +200,7 @@ void jevois_event(void)
 				tok = strtok(0, " \r\n");
 				j++;
 			}
+			georeference_run();
 			jevois_parse_msg();
 			i = 0;
 			j = 0;
