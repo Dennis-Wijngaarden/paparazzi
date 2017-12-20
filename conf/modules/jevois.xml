@@ -9,7 +9,7 @@
   </header>
   <init fun="jevois_init()"/>
   <event fun="jevois_event()"/>
-  <periodic fun="georeference_run()" start="georeference_init()" autorun="TRUE" />
+  <!-- <periodic fun="georeference_run()" start="georeference_init()" autorun="TRUE" /> -->
   <makefile>
   	<configure name="JEVOIS_PORT" default="UART2" case="upper|lower"/>
   	<configure name="JEVOIS_BAUD" default="B115200"/>
