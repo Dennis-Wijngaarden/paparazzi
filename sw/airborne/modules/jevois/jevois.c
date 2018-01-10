@@ -151,7 +151,7 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
   // ENU
   if (wp > 0) {
     waypoint_set_xy_i(wp, geo.x_t.y, geo.x_t.x);
-    waypoint_set_alt_i(wp, geo.x_t.z);
+    //waypoint_set_alt_i(wp, geo.x_t.z);
 
     int32_t h = -geo.x_t.z;
     uint8_t wp_id = wp;
