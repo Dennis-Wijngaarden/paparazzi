@@ -157,6 +157,8 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
     uint8_t wp_id = wp;
     DOWNLINK_SEND_WP_MOVED_ENU(DefaultChannel, DefaultDevice, &wp_id, &(geo.x_t.y),
                                    &(geo.x_t.x), &(h));
+    printf("%d\n", geo.x_t.x);
+
   }
 }
 
@@ -170,7 +172,6 @@ void georeference_run(void)
 	cam.px = (1000 + jevois_data.x) * (cam.w)/2000;
 	cam.py = (1000 + jevois_data.y) * (cam.h)/2000;
 	georeference_project(&cam, WP_tar);
-	NavGotoWaypoint(WP_tar);
 }
 
 void jevois_event(void)
