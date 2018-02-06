@@ -31,12 +31,12 @@
   </firmware>
 
   <modules main_freq="512">
-    <!--<module name="geo_mag"/> -->
+    <module name="geo_mag"/>
     <module name="air_data"/>
-    <!--<module name="send_imu_mag_current"/> -->
-    <!-- <module name="logger_file">
+    <module name="send_imu_mag_current"/>
+    <module name="logger_file">
       <define name="FILE_LOGGER_PATH" value="/data/ftp/internal_000"/>
-    </module> -->
+    </module>
   </modules>
 
   <commands>
@@ -47,10 +47,10 @@
   </commands>
 
   <servos driver="Default">
-    <servo name="TOP_LEFT" no="0" min="3000" neutral="3000" max="12000"/>
-    <servo name="TOP_RIGHT" no="1" min="3000" neutral="3000" max="12000"/>
-    <servo name="BOTTOM_RIGHT" no="2" min="3000" neutral="3000" max="12000"/>
-    <servo name="BOTTOM_LEFT" no="3" min="3000" neutral="3000" max="12000"/>
+    <servo name="TOP_RIGHT" no="0" min="3000" neutral="3000" max="12000"/>
+    <servo name="TOP_LEFT" no="1" min="3000" neutral="3000" max="12000"/>
+    <servo name="BOTTOM_LEFT" no="2" min="3000" neutral="3000" max="12000"/>
+    <servo name="BOTTOM_RIGHT" no="3" min="3000" neutral="3000" max="12000"/>
   </servos>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
@@ -160,7 +160,7 @@
     <define name="ACT_DYN_R" value="0.1"/>
 
     <!-- Adaptive Learning Rate -->
-    <define name="USE_ADAPTIVE" value="TRUE"/>
+    <define name="USE_ADAPTIVE" value="FALSE"/>
     <define name="ADAPTIVE_MU" value="0.0001"/>
   </section>
 
