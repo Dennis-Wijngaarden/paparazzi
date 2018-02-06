@@ -33,6 +33,7 @@
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="float_mlkf"/>
     <module name="ins" type="extended"/>
+    <module name="cv_georeference.xml"/>
   </firmware>
 
   <modules main_freq="512">

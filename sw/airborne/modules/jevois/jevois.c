@@ -50,8 +50,10 @@ static struct jevois_t jevois = {
 // Georeference structure
 struct georeference_jevois_t geo;
 
-/* field of view of the camera sensor */
+/* Focal length and field of view of the camera sensor */
+int32_t focal_length;
 int32_t FOV = 65; //field of view [degrees] specific jevois parameter
+
 
 // Set message buffer
 static char jevois_msg_buf[128] __attribute__ ((aligned)); // Create a 128 bytes buffer
@@ -72,9 +74,12 @@ void georeference_init(void)
   INT32_VECT3_ZERO(geo.target_l);
 
   VECT3_ASSIGN(geo.x_t, 0, 0, 0);
+
+  focal_length = cam.w/(2*tan(FOV*(M_PI/(2*180)))); //set to constant value for demoaruco module of jevois in pixels
+  printf("%d", focal_length); //effe om te checken of de focal length correct is
 }
 
-void jevois_init(void)
+void jevois_init()
 {
 	pprz_transport_init(&jevois.transport);
 	//uart_periph_set_baudrate(&uart2, B115200);
@@ -86,7 +91,7 @@ void jevois_init(void)
 	georeference_init();
 }
 
-void jevois_parse_msg(void)
+void jevois_parse_msg()
 {
 #if PERIODIC_TELEMETRY
 	register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_JEVOIS_DATA, send_jevois_data);
@@ -163,18 +168,19 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
 void georeference_run(void)
 {
 	// Camera structure
-	struct camera_frame_jevois_t cam;
-	cam.w = 320;
-	cam.h = 240;
-	cam.f = cam.w/(2*tan(FOV*(M_PI/(2*180)))); //set to constant value for demoaruco module of jevois in pixels;
-	cam.px = (1000 + jevois_data.x) * (cam.w/2000);
-	cam.py = (1000 + jevois_data.y) * (cam.h/2000);
+	struct camera_frame_jevois_t cam = {
+			.w = 320,
+			.h = 240,
+			.f = focal_length,
+			//TODO put px and py in here as they are updated
+	};
 
 	georeference_project(&cam, WP_tar);
 }
 
-void jevois_event(void)
+void jevois_event()
 {
+
 	static uint8_t i = 0;
 	static uint8_t j = 0;
 
