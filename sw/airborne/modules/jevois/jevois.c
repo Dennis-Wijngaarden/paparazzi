@@ -56,13 +56,12 @@ int32_t FOV = 65; //field of view [degrees] specific jevois parameter
 // Set message buffer
 static char jevois_msg_buf[128] __attribute__ ((aligned)); // Create a 128 bytes buffer
 static struct jevois_raw_data jevois_data;
-static struct camera_frame_jevois_t cam;
 
 #if PERIODIC_TELEMETRY
 #include "subsystems/datalink/telemetry.h"
 static void send_jevois_data(struct transport_tx *trans, struct link_device *dev)
 {
-	pprz_msg_send_JEVOIS_DATA(trans, dev, AC_ID, &jevois_data.x, &jevois_data.y, &cam.px, &cam.py);
+	pprz_msg_send_JEVOIS_DATA(trans, dev, AC_ID, &jevois_data.x, &jevois_data.y);
 }
 #endif
 
@@ -157,7 +156,6 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
     uint8_t wp_id = wp;
     DOWNLINK_SEND_WP_MOVED_ENU(DefaultChannel, DefaultDevice, &wp_id, &(geo.x_t.y),
                                    &(geo.x_t.x), &(h));
-    printf("%d\n", geo.x_t.x);
 
   }
 }
@@ -165,12 +163,13 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
 void georeference_run(void)
 {
 	// Camera structure
-	//struct camera_frame_jevois_t cam;
+	struct camera_frame_jevois_t cam;
 	cam.w = 320;
 	cam.h = 240;
 	cam.f = cam.w/(2*tan(FOV*(M_PI/(2*180)))); //set to constant value for demoaruco module of jevois in pixels;
-	cam.px = (1000 + jevois_data.x) * (cam.w)/2000;
-	cam.py = (1000 + jevois_data.y) * (cam.h)/2000;
+	cam.px = (1000 + jevois_data.x) * (cam.w/2000);
+	cam.py = (1000 + jevois_data.y) * (cam.h/2000);
+
 	georeference_project(&cam, WP_tar);
 }
 
