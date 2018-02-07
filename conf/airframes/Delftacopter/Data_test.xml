@@ -1,7 +1,0 @@
-<firmware name="rotorcraft">
-	<target name="ap" board="lisa_mx_2.1"/>
-	<configure name="SYS_TIME_LED" value="1"/>
-    <configure name="RADIO_CONTROL_LED" value="2"/>
-    <subsystem name="telemetry"     type="transparent"/>
-
-  </firmware>
