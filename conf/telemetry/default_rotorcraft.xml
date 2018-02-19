@@ -28,11 +28,7 @@
       <message name="OPTIC_FLOW_EST"         period="0.05"/>
       <message name="VECTORNAV_INFO"         period="0.5"/>
       <message name="DIVERGENCE"             period="0.05"/>
-<<<<<<< HEAD
-      <message name="JEVOIS_DATA"		     period="0.05"/>
-=======
       <message name="DRAGSPEED"              period="0.02"/>
->>>>>>> pprz/master
     </mode>
 
     <mode name="ppm">

@@ -8,7 +8,7 @@
     <file name="jevois_comm.h"/>
   </header>
   <init fun="jevois_comm_init()"/>
-  <event fun="jevois_parse_command()"/>
+  <event fun="jevois_test()"/>
   <makefile>
     <configure name="JEVOIS_PORT" default="UART2" case="upper|lower"/>
   	<configure name="JEVOIS_BAUD" default="B115200"/>
@@ -16,8 +16,8 @@
     <define name="USE_$(JEVOIS_PORT_UPPER)_TX" value="FALSE"/>
     <define name="$(JEVOIS_PORT_UPPER)_BAUD" value="$(JEVOIS_BAUD)"/>
     <define name="JEVOIS_PORT" value="$(JEVOIS_PORT_LOWER)"/>
-    <file name="pprz_transport.c" dir="pprzlink/src"/>
     <file name="jevois_comm.c"/>
+    <file name="uart.c" dir="mcu_periph"/>
   </makefile>
 </module>
 

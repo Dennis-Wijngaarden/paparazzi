@@ -26,26 +26,31 @@
 #ifndef JEVOIS_COMM_H
 #define JEVOIS_COMM_H
 
-extern void jevois_comm_init();
-extern void jevois_comm_event();
+#include "std.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include "generated/airframe.h"
+#include "mcu_periph/uart.h"
+#include "modules/sonar/sonar_bebop.h"
 
-/* Main jevois_comm structure */
-struct jevois_comm_t {
-  struct link_device *device;           ///< The device which is uses for communication
-  struct pprz_transport transport;      ///< The transport layer (PPRZ)
-  bool msg_available;                 ///< If we received a message
-};
 
 // Data structure
-static struct jevois_comm_data {
+struct jevois_comm_data {
 	int16_t x;
 	int16_t y;
 };
 
 // Data Command structure
-static struct jevois_comm_command {
+struct jevois_comm_command {
 	int16_t alt;
 };
+
+extern void jevois_comm_init(void);
+extern void jevois_comm_event(void);
+extern void jevois_setpar_value_f(char par_name[], float value);
+extern void SendString(char string[]);
+extern void jevois_test(void);
 
 #endif
 

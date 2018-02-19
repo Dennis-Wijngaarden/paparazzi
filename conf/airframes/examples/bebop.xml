@@ -29,46 +29,31 @@
     <module name="motor_mixing"/>
     <module name="actuators" type="bebop"/>
     <module name="imu" type="bebop"/>
-    <module name="gps" type="furuno"/>
+    <module name="gps" type="datalink"/>
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="float_mlkf"/>
     <module name="ins" type="extended"/>
-<<<<<<< HEAD
-    <module name="cv_georeference.xml"/>
-  </firmware>
-
-  <modules main_freq="512">
-    <!--  <module name="geo_mag"/> -->
-=======
     
     <module name="geo_mag"/>
->>>>>>> pprz/master
     <module name="air_data"/>
-    <!--  <module name="send_imu_mag_current"/> -->
-    <module name="jevois">
-    	<define name="PERIODIC_TELEMETRY" value="1"/>
-    </module>
+    <module name="send_imu_mag_current"/>
     <!--module name="logger_file">
       <define name="FILE_LOGGER_PATH" value="/data/ftp/internal_000"/>
     </module-->
 
-    <!--<module name="video_thread"/>
+    <!-- <module name="video_thread"/>
 
     <module name="video_rtp_stream">
       <define name="VIEWVIDEO_CAMERA" value="bottom_camera"/>
       <define name="VIEWVIDEO_CAMERA2" value="front_camera"/>
       <define name="VIEWVIDEO_DOWNSIZE_FACTOR" value="2"/>
       <define name="VIEWVIDEO_QUALITY_FACTOR" value="40"/>
-    </module>
+    </module> -->
 
-<<<<<<< HEAD
-    <module name="bebop_ae_awb"/> -->
+    <module name="jevois_comm"/>
 
-  </modules>
-=======
     <module name="bebop_ae_awb"/>
   </firmware>
->>>>>>> pprz/master
 
   <commands>
     <axis name="PITCH" failsafe_value="0"/>
@@ -227,3 +212,5 @@
     <define name="MAX_BAT_LEVEL" value="12.4" unit="V"/>
   </section>
 </airframe>
+
+  

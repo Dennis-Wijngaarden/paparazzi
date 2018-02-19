@@ -30,16 +30,11 @@
 
 #include "state.h"
 
-#include "pprzlink/pprz_transport.h"
 #include "mcu_periph/uart.h"
+#include "modules/sonar/sonar_bebop.h"
 
-// Main jevois_comm structure
-static struct jevois_comm_t jevois_comm = {
-		.device = (&((JEVOIS_PORT).device)),
-		.msg_available = false
-};
-
-#define JevoisLinkTransmit(c) jevois_comm.device->put_byte(jevois_comm.device->periph, 0, c)
+#define JevoisLinkDev (&((JEVOIS_PORT).device))
+#define JevoisLinkTransmit(c) JevoisLinkDev->put_byte(JevoisLinkDev->periph, 0, c)
 
 // Set message buffer
 static char jevois_msg_buf[128] __attribute__ ((aligned)); // Create a 128 bytes buffer
@@ -47,10 +42,10 @@ static char jevois_msg_buf[128] __attribute__ ((aligned)); // Create a 128 bytes
 // Set data structure
 static struct jevois_comm_data jevois_data;
 
+uint8_t testint=200;
+
 void jevois_comm_init()
 {
-	pprz_transport_init(&jevois_comm.transport);
-	//uart_periph_set_baudrate(&uart2, B115200);
 }
 
 void jevois_comm_event()
@@ -87,26 +82,38 @@ void jevois_comm_event()
 	}
 }
 
-void jevois_parse_command() {
-	static uint8_t i = 0;
-	static uint8_t j;
-	static uint8_t c;
-	static uint8_t command_parsed = 0;
-	static char setpar[8] = "setpar ";
-	static char altitude_str[] = "altitude ";
 
-	j = strlen(setpar);
 
-	while(command_parsed == 0) {
-		if(i < j) {
-			c = setpar[i];
-			JevoisLinkTransmit(c);
-		}
-		else{
-			command_parsed = 1;
-		}
-	}
+void jevois_setpar_value_f(char par_name[], float value) {
+	char valuestring[16];
+	sprintf(valuestring, "%f", value);
+	SendString("setpar ");
+	SendString(par_name);
+	SendString(" ");
+	SendString(valuestring);
+	JevoisLinkTransmit(13);
+	JevoisLinkTransmit(10); //Parse line
+}
 
+void jevois_test(){
+	jevois_setpar_value_f("alt", stateGetPositionEnu_f()->z); // Get position from NED measurements as float in meters
+	//jevois_setpar_value("alt", state.alt_agl_f); // Altitude above ground as float
+	//jevois_setpar_value("alt", sonar_bebop.distance); // Sonar measurement directly taken from the bebop sonar subsystem
+	jevois_setpar_value_f("lat", stateGetPositionLla_f()->lat); // In radians
+	jevois_setpar_value_f("lon", stateGetPositionLla_f()->lon); // In radians
+	jevois_setpar_value_f("phi", stateGetNedToBodyEulers_f()->phi); //In radians
+	jevois_setpar_value_f("theta", stateGetNedToBodyEulers_f()->theta); //In radians
+	jevois_setpar_value_f("psi", stateGetNedToBodyEulers_f()->psi); //In radians
+}
+
+
+void SendString(char string[])
+{
+  int i = 0;
+
+  while (string[i]) {
+    JevoisLinkTransmit(string[i++]);
+  }
 }
 
 
