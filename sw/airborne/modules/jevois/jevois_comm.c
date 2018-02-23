@@ -96,14 +96,16 @@ void jevois_setpar_value_f(char par_name[], float value) {
 }
 
 void jevois_test(){
-	jevois_setpar_value_f("alt", stateGetPositionEnu_f()->z); // Get position from NED measurements as float in meters
+	//jevois_setpar_value_f("alt", stateGetPositionEnu_f()->z); // Get position from NED measurements as float in meters
 	//jevois_setpar_value("alt", state.alt_agl_f); // Altitude above ground as float
 	//jevois_setpar_value("alt", sonar_bebop.distance); // Sonar measurement directly taken from the bebop sonar subsystem
-	jevois_setpar_value_f("lat", stateGetPositionLla_f()->lat); // In radians
-	jevois_setpar_value_f("lon", stateGetPositionLla_f()->lon); // In radians
-	jevois_setpar_value_f("phi", stateGetNedToBodyEulers_f()->phi); //In radians
-	jevois_setpar_value_f("theta", stateGetNedToBodyEulers_f()->theta); //In radians
-	jevois_setpar_value_f("psi", stateGetNedToBodyEulers_f()->psi); //In radians
+	//jevois_setpar_value_f("lat", stateGetPositionLla_f()->lat); // In radians
+	//jevois_setpar_value_f("lon", stateGetPositionLla_f()->lon); // In radians
+	//jevois_setpar_value_f("alt", stateGetNedToBodyEulers_f()->phi); //In radians
+	JevoisLinkTransmit(5);
+	//JevoisLinkTransmit(10);
+	//jevois_setpar_value_f("theta", stateGetNedToBodyEulers_f()->theta); //In radians
+	//jevois_setpar_value_f("psi", stateGetNedToBodyEulers_f()->psi); //In radians
 }
 
 
