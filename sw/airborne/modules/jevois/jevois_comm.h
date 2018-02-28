@@ -34,6 +34,11 @@
 #include "mcu_periph/uart.h"
 #include "modules/sonar/sonar_bebop.h"
 
+#define NEW_MESSAGE_BYTE 0
+#define FIRST_STATE_BYTE 0
+#define SECOND_STATE_BYTE 1
+#define SECOND_LAST_STATE_BYTE 150
+#define LAST_STATE_BYTE 151
 
 // Data structure
 struct jevois_comm_data {
@@ -41,16 +46,30 @@ struct jevois_comm_data {
 	int16_t y;
 };
 
-// Data Command structure
-struct jevois_comm_command {
-	int16_t alt;
+// Transmit state structure
+struct jevois_state_data {
+	float alt;
+	float phi;
+	float theta;
+	float psi;
+	float lat;
+	float lon;
+};
+
+// Define state union from float to 4 int8 numbers
+union float2bytes {
+	float f;
+	char b[4];
 };
 
 extern void jevois_comm_init(void);
 extern void jevois_comm_event(void);
 extern void jevois_setpar_value_f(char par_name[], float value);
 extern void SendString(char string[]);
-extern void jevois_test(void);
+//extern void jevois_test(void);
+extern void get_jevois_state(void);
+extern void jevois_parse_state(void);
+extern void SendFloat(float);
 
 #endif
 

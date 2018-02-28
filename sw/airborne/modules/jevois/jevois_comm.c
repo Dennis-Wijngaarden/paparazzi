@@ -42,7 +42,8 @@ static char jevois_msg_buf[128] __attribute__ ((aligned)); // Create a 128 bytes
 // Set data structure
 static struct jevois_comm_data jevois_data;
 
-uint8_t testint=200;
+// set state data structure
+static struct jevois_state_data jevois_state;
 
 void jevois_comm_init()
 {
@@ -96,18 +97,56 @@ void jevois_setpar_value_f(char par_name[], float value) {
 }
 
 void jevois_test(){
-	//jevois_setpar_value_f("alt", stateGetPositionEnu_f()->z); // Get position from NED measurements as float in meters
+	//jevois_setpar_value_f("alt", stateGetPositionEnu_i()->z); // Get position from ENU measurements as integer 32 in meters
 	//jevois_setpar_value("alt", state.alt_agl_f); // Altitude above ground as float
 	//jevois_setpar_value("alt", sonar_bebop.distance); // Sonar measurement directly taken from the bebop sonar subsystem
 	//jevois_setpar_value_f("lat", stateGetPositionLla_f()->lat); // In radians
 	//jevois_setpar_value_f("lon", stateGetPositionLla_f()->lon); // In radians
 	//jevois_setpar_value_f("alt", stateGetNedToBodyEulers_f()->phi); //In radians
-	JevoisLinkTransmit(5);
+	//JevoisLinkTransmit(5);
 	//JevoisLinkTransmit(10);
 	//jevois_setpar_value_f("theta", stateGetNedToBodyEulers_f()->theta); //In radians
 	//jevois_setpar_value_f("psi", stateGetNedToBodyEulers_f()->psi); //In radians
 }
 
+void get_jevois_state(){
+	jevois_state.alt = stateGetPositionEnu_f()->z; //m
+	jevois_state.phi = stateGetNedToBodyEulers_f()->phi; //rad
+	jevois_state.theta = stateGetNedToBodyEulers_f()->theta; //rad
+	jevois_state.psi = stateGetNedToBodyEulers_f()->psi; //rad
+	jevois_state.lat = stateGetPositionLla_f()->lat; //radians
+	jevois_state.lon = stateGetPositionLla_f()->lon; //radians
+}
+
+void jevois_parse_state(){
+	get_jevois_state();
+	//Initiate Data package transmission
+	//JevoisLinkTransmit(NEW_MESSAGE_BYTE);
+	JevoisLinkTransmit(FIRST_STATE_BYTE); // 1 byte 0
+	JevoisLinkTransmit(SECOND_STATE_BYTE); // 1 byte 1
+	//JevoisLinkTransmit(6);
+	//JevoisLinkTransmit(19);
+	//JevoisLinkTransmit(13);
+	//Transmit Data
+	SendFloat(jevois_state.alt); //parse alt 4 bytes 2 3 4 5
+	SendFloat(jevois_state.phi); //parse phi 4 bytes 6 7 8 9
+	SendFloat(jevois_state.theta); //parse theta 4 bytes 10 11 12 13
+	SendFloat(jevois_state.psi); //parse psi 4 bytes 14 15 16 17
+	SendFloat(jevois_state.lat); //parse lat 4 bytes 18 19 20 21
+	SendFloat(jevois_state.lon); //parse lon 4 bytes 22 23 24 25
+	// End Data package
+	JevoisLinkTransmit(SECOND_LAST_STATE_BYTE); // 1 byte 26
+ 	JevoisLinkTransmit(LAST_STATE_BYTE); // 1 byte 27
+}
+
+void SendFloat(float f){
+	// Define state union from float to 4 int8 bytes
+	union float2bytes {float f;char b[4];} f2b;
+	f2b.f = f;
+	for (int i=0; i<sizeof(float); i++){
+		JevoisLinkTransmit(f2b.b[i]);
+	}
+}
 
 void SendString(char string[])
 {
