@@ -50,19 +50,20 @@ static struct jevois_t jevois = {
 // Georeference structure
 struct georeference_jevois_t geo;
 
-/* field of view of the camera sensor */
+/* Focal length and field of view of the camera sensor */
+int32_t focal_length;
 int32_t FOV = 65; //field of view [degrees] specific jevois parameter
+
 
 // Set message buffer
 static char jevois_msg_buf[128] __attribute__ ((aligned)); // Create a 128 bytes buffer
 static struct jevois_raw_data jevois_data;
-static struct camera_frame_jevois_t cam;
 
 #if PERIODIC_TELEMETRY
 #include "subsystems/datalink/telemetry.h"
 static void send_jevois_data(struct transport_tx *trans, struct link_device *dev)
 {
-	pprz_msg_send_JEVOIS_DATA(trans, dev, AC_ID, &jevois_data.x, &jevois_data.y, &cam.px, &cam.py);
+	pprz_msg_send_JEVOIS_DATA(trans, dev, AC_ID, &jevois_data.x, &jevois_data.y);
 }
 #endif
 
@@ -73,9 +74,12 @@ void georeference_init(void)
   INT32_VECT3_ZERO(geo.target_l);
 
   VECT3_ASSIGN(geo.x_t, 0, 0, 0);
+
+  focal_length = cam.w/(2*tan(FOV*(M_PI/(2*180)))); //set to constant value for demoaruco module of jevois in pixels
+  printf("%d", focal_length); //effe om te checken of de focal length correct is
 }
 
-void jevois_init(void)
+void jevois_init()
 {
 	pprz_transport_init(&jevois.transport);
 	//uart_periph_set_baudrate(&uart2, B115200);
@@ -87,7 +91,7 @@ void jevois_init(void)
 	georeference_init();
 }
 
-void jevois_parse_msg(void)
+void jevois_parse_msg()
 {
 #if PERIODIC_TELEMETRY
 	register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_JEVOIS_DATA, send_jevois_data);
@@ -109,7 +113,7 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
 
   // Camera <-> Body
   // Looking down in body frame
-  // Bebop has 180deg z rotation but jevois has not so no minus before first two 1's, this rotation can be eliminated if it works as cam and body frame are equal in case of jevois
+  // Bebop has 180deg Z rotation in camera (butt up yields normal webcam)
   struct Int32RMat body_to_cam_rmat;
   INT32_MAT33_ZERO(body_to_cam_rmat);
   MAT33_ELMT(body_to_cam_rmat, 0, 0) = 1 << INT32_TRIG_FRAC;
@@ -157,24 +161,26 @@ void georeference_project(struct camera_frame_jevois_t *tar, int wp)
     uint8_t wp_id = wp;
     DOWNLINK_SEND_WP_MOVED_ENU(DefaultChannel, DefaultDevice, &wp_id, &(geo.x_t.y),
                                    &(geo.x_t.x), &(h));
+
   }
 }
 
 void georeference_run(void)
 {
 	// Camera structure
-	//struct camera_frame_jevois_t cam;
-	cam.w = 320;
-	cam.h = 240;
-	cam.f = cam.w/(2*tan(FOV*(M_PI/(2*180)))); //set to constant value for demoaruco module of jevois in pixels;
-	cam.px = (1000 + jevois_data.x) * (cam.w)/2000;
-	cam.py = (1000 + jevois_data.y) * (cam.h)/2000;
+	struct camera_frame_jevois_t cam = {
+			.w = 320,
+			.h = 240,
+			.f = focal_length,
+			//TODO put px and py in here as they are updated
+	};
+
 	georeference_project(&cam, WP_tar);
-	NavGotoWaypoint(WP_tar);
 }
 
-void jevois_event(void)
+void jevois_event()
 {
+
 	static uint8_t i = 0;
 	static uint8_t j = 0;
 
@@ -200,7 +206,6 @@ void jevois_event(void)
 				tok = strtok(0, " \r\n");
 				j++;
 			}
-			georeference_run();
 			jevois_parse_msg();
 			i = 0;
 			j = 0;
