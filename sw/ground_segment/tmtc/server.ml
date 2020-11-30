@@ -689,6 +689,11 @@ let listen_acs = fun log timestamp ->
   if !replay_old_log then
     ignore (Tm_Pprz.message_bind "PPRZ_MODE" (ident_msg log timestamp))
 
+(* Remove aicraft on AIRCRAFT_DIE message.  *)
+let remove_aircraft = fun _sender vs ->
+  let ac_id = PprzLink.string_assoc "ac_id" vs in
+  Hashtbl.remove aircrafts ac_id
+
 let send_intruder_acinfo = fun id intruder ->
   let cm_of_m_32 = fun f -> PprzLink.Int32 (Int32.of_int (truncate (100. *. f))) in
   let cm_of_m = fun f -> PprzLink.Int (truncate (100. *. f)) in
@@ -749,9 +754,9 @@ let listen_intruders = fun log ->
   ignore(Ground_Pprz.message_bind "INTRUDER" (update_intruder log))
 
 let send_config = fun http _asker args ->
-  let ac_id' = PprzLink.string_assoc "ac_id" args in
+  let real_id = PprzLink.string_assoc "ac_id" args in
   try
-    let _is_replayed, ac_id, root_dir, conf_xml = replayed ac_id' in
+    let _is_replayed, ac_id, root_dir, conf_xml = replayed real_id in
 
     let conf = ExtXml.child conf_xml "aircraft" ~select:(fun x -> ExtXml.attrib x "ac_id" = ac_id) in
     let ac_name = ExtXml.attrib conf "name" in
@@ -770,7 +775,7 @@ let send_config = fun http _asker args ->
                                                        "settings.xml") else "file://replay" in
     let col = try Xml.attrib conf "gui_color" with _ -> new_color () in
     let ac_name = try Xml.attrib conf "name" with _ -> "" in
-    [ "ac_id", PprzLink.String ac_id;
+    [ "ac_id", PprzLink.String real_id;
       "flight_plan", PprzLink.String fp;
       "airframe", PprzLink.String af;
       "radio", PprzLink.String rc;
@@ -779,7 +784,7 @@ let send_config = fun http _asker args ->
       "ac_name", PprzLink.String ac_name ]
   with
       Not_found ->
-        failwith (sprintf "ground UNKNOWN %s" ac_id')
+        failwith (sprintf "ground UNKNOWN %s" real_id)
 
 let ivy_server = fun http ->
   ignore (Ground_Pprz.message_answerer my_id "AIRCRAFTS" send_aircrafts_msg);
@@ -931,6 +936,8 @@ let () =
 
   (* Waits for new aircrafts *)
   listen_acs logging !timestamp;
+
+  ignore(Ground_Pprz.message_bind "AIRCRAFT_DIE" remove_aircraft);
 
   (* wait for new external vehicles/intruders *)
   listen_intruders logging;
