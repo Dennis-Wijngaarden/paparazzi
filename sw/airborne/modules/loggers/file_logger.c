@@ -40,6 +40,8 @@
 #endif
 
 #include "state.h"
+#include "subsystems/radio_control.h"
+#include "subsystems/actuators.h"
 
 /** Set the default File logger path to the USB drive */
 #ifndef FILE_LOGGER_PATH
@@ -90,7 +92,7 @@ void file_logger_start(void)
 #ifdef COMMAND_THRUST
       "counter,gyro_unscaled_p,gyro_unscaled_q,gyro_unscaled_r,accel_unscaled_x,accel_unscaled_y,accel_unscaled_z,mag_unscaled_x,mag_unscaled_y,mag_unscaled_z,COMMAND_THRUST,COMMAND_ROLL,COMMAND_PITCH,COMMAND_YAW,qi,qx,qy,qz\n"
 #else
-      "counter,gyro_unscaled_p,gyro_unscaled_q,gyro_unscaled_r,accel_unscaled_x,accel_unscaled_y,accel_unscaled_z,mag_unscaled_x,mag_unscaled_y,mag_unscaled_z,	h_ctl_aileron_setpoint, h_ctl_elevator_setpoint, qi,qx,qy,qz\n"
+      "counter,gyro_unscaled_p,gyro_unscaled_q,gyro_unscaled_r,accel_unscaled_x,accel_unscaled_y,accel_unscaled_z, ned_speed_i_x, ned_speed_i_y, ned_speed_i_z, ned_pos_i_x, ned_pos_i_y, ned_pos_i_z, airspeed_i,	radio_throttle, radio_roll, radio_pitch, actuators_throttle, actuators_ailevon_right, actuators_ailevon_left, h_ctl_aileron_setpoint, h_ctl_elevator_setpoint, qi,qx,qy,qz\n"
 #endif
     );
   }
@@ -137,7 +139,7 @@ void file_logger_periodic(void)
           quat->qz
          );
 #else
-  fprintf(file_logger, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
+  fprintf(file_logger, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
           counter,
           imu.gyro_unscaled.p,
           imu.gyro_unscaled.q,
@@ -145,9 +147,19 @@ void file_logger_periodic(void)
           imu.accel_unscaled.x,
           imu.accel_unscaled.y,
           imu.accel_unscaled.z,
-          imu.mag_unscaled.x,
-          imu.mag_unscaled.y,
-          imu.mag_unscaled.z,
+          state.ned_speed_i.x,
+          state.ned_speed_i.y,
+          state.ned_speed_i.z,
+          state.ned_pos_i.x,
+          state.ned_pos_i.y,
+          state.ned_pos_i.z,
+          state.airspeed_i,
+          radio_control.values[0],
+          radio_control.values[1],
+          radio_control.values[2],
+          actuators[0],
+          actuators[1],
+          actuators[2],
 		  h_ctl_aileron_setpoint,
 		  h_ctl_elevator_setpoint,
           quat->qi,
