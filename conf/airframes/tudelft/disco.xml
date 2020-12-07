@@ -37,7 +37,10 @@
       <define name="USE_SONAR"/>
       <define name="SENSOR_SYNC_SEND_SONAR"/>
     </module>-->
-  <module name="vutura_utm_interface"/>
+  <!--<module name="vutura_utm_interface"/>-->
+  <module name="logger_file">
+      <define name="FILE_LOGGER_PATH" value="/data/ftp/internal_000"/>
+  </module>
   </firmware>
 
   <servos>
