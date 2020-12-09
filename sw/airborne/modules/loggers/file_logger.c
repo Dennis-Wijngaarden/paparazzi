@@ -36,6 +36,8 @@
 #include "mcu_periph/sys_time.h"
 #include "state.h"
 #include "generated/airframe.h"
+#include "subsystems/radio_control.h"
+#include "subsystems/actuators.h"
 #ifdef COMMAND_THRUST
 #include "firmwares/rotorcraft/stabilization.h"
 #else
@@ -65,8 +67,13 @@ static void file_logger_write_header(FILE *file) {
   fprintf(file, "time,");
   fprintf(file, "pos_x,pos_y,pos_z,");
   fprintf(file, "vel_x,vel_y,vel_z,");
+  fprintf(file, "airspeed,");
+  fprintf(file, "acc_x,acc_y,acc_z,");
   fprintf(file, "att_phi,att_theta,att_psi,");
   fprintf(file, "rate_p,rate_q,rate_r,");
+  fprintf(file, "qaut_qi,quat_qx,quat_qy,quat_qz,");
+  fprintf(file, "radio_throttle,radio_roll,radio_pitch,");
+  fprintf(file, "actuators_throttle,actuators_ailevon_right,actuators_ailevon_left,");
 #ifdef COMMAND_THRUST
   fprintf(file, "cmd_thrust,cmd_roll,cmd_pitch,cmd_yaw\n");
 #else
@@ -83,14 +90,21 @@ static void file_logger_write_header(FILE *file) {
 static void file_logger_write_row(FILE *file) {
   struct NedCoor_f *pos = stateGetPositionNed_f();
   struct NedCoor_f *vel = stateGetSpeedNed_f();
+  struct NedCoor_f *acc = stateGetAccelNed_f();
   struct FloatEulers *att = stateGetNedToBodyEulers_f();
   struct FloatRates *rates = stateGetBodyRates_f();
+  struct FloatQuat *quat = stateGetNedToBodyQuat_f();
 
   fprintf(file, "%f,", get_sys_time_float());
   fprintf(file, "%f,%f,%f,", pos->x, pos->y, pos->z);
   fprintf(file, "%f,%f,%f,", vel->x, vel->y, vel->z);
+  fprintf(file, "%f,%f,%f,", acc->x, acc->y, acc->z);
+  fprintf(file, "%f,", stateGetAirspeed_f());
   fprintf(file, "%f,%f,%f,", att->phi, att->theta, att->psi);
   fprintf(file, "%f,%f,%f,", rates->p, rates->q, rates->r);
+  fprintf(file, "%f,%f,%f,%f,", quat->qi, quat->qx,quat->qy,quat->qz);
+  fprintf(file, "%i,%i,%i,", radio_control.values[0], radio_control.values[1], radio_control.values[2]);
+  fprintf(file, "%i,%i,%i,", actuators[0], actuators[1], actuators[2]);
 #ifdef COMMAND_THRUST
   fprintf(file, "%d,%d,%d,%d\n",
       stabilization_cmd[COMMAND_THRUST], stabilization_cmd[COMMAND_ROLL],
