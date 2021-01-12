@@ -87,7 +87,7 @@ static PWMConfig pwmcfg10 = PWM_CONF10_DEF;
 #if PWM_CONF_TIM11
 static PWMConfig pwmcfg11 = PWM_CONF11_DEF;
 #endif
-#if PWM_CONF_TI12
+#if PWM_CONF_TIM12
 static PWMConfig pwmcfg12 = PWM_CONF12_DEF;
 #endif
 
