@@ -221,20 +221,20 @@ static void adc_sample_time_on_all_channels(uint32_t *smpr1, uint32_t *smpr2, ui
  * @param[in] buffer pointer to a @p buffer with samples
  * @param[in] n number of samples
  */
-void adc1callback(ADCDriver *adcp, adcsample_t *buffer, size_t n)
+void adc1callback(ADCDriver *adcp)
 {
   if (adcp->state != ADC_STOP) {
 #if USE_AD1
     for (int channel = 0; channel < ADC_NUM_CHANNELS; channel++) {
       if (adc1_buffers[channel] != NULL) {
         adc1_sum_tmp[channel] = 0;
-        if (n > 0) {
-          adc1_samples_tmp[channel] = n;
+        if (adcp->depth > 0) {
+          adc1_samples_tmp[channel] = adcp->depth;
         } else {
           adc1_samples_tmp[channel] = 1;
         }
-        for (unsigned int sample = 0; sample < n; sample++) {
-          adc1_sum_tmp[channel] += buffer[channel + sample * ADC_NUM_CHANNELS];
+        for (unsigned int sample = 0; sample < adcp->depth; sample++) {
+          adc1_sum_tmp[channel] += adcp->samples[channel + sample * ADC_NUM_CHANNELS];
         }
       }
     }

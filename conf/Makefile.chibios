@@ -77,7 +77,7 @@ endif
 #
 # Add syscalls and c++ new/delete operators
 #
-$(TARGET).srcs += c++.cpp pprz_syscalls.c
+#$(TARGET).srcs += c++.cpp pprz_syscalls.c
 $(TARGET).CXXFLAGS += -fno-sized-deallocation
 $(TARGET).CXXFLAGS += $(CXXSTANDARD)
 
@@ -205,7 +205,7 @@ include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CHIBIOS_BOARD_STA
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/hal/ports/STM32/$(CHIBIOS_BOARD_PLATFORM)
 include $(CHIBIOS_BOARD_DIR)/board.mk
-include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
@@ -222,6 +222,7 @@ LDSCRIPT= $(CHIBIOS_LINKER_DIR)/$(CHIBIOS_BOARD_LINKER)
 # setting.
 CSRC = $(STARTUPSRC) \
        $(KERNSRC) \
+       $(LIBSRC) \
        $(PORTSRC) \
        $(OSALSRC) \
        $(HALSRC) \
@@ -261,7 +262,7 @@ TCPPSRC =
 # List ASM source files here
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-INCDIR = $(CHIBIOS)/os/license $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
+INCDIR = $(CHIBIOS)/os/license $(STARTUPINC) $(KERNINC) $(LIBINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) $(FATFSINC) \
          $(CHIBIOS)/os/various $(CHIBIOS_BOARD_DIR) $(CHIBIOS_PROJECT_DIR)
 
