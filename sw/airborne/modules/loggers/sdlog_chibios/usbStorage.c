@@ -100,7 +100,7 @@ static void thdUsbStorage(void *arg)
   chRegSetThreadName("UsbStorage:polling");
   event_listener_t connected;
 
-  palEnablePadEvent(SDLOG_USB_VBUS_PORT, SDLOG_USB_VBUS_PIN, PAL_EVENT_MODE_BOTH_EDGES);
+  pal_lld_enablepadevent(SDLOG_USB_VBUS_PORT, SDLOG_USB_VBUS_PIN, PAL_EVENT_MODE_BOTH_EDGES);
   // wait transition to HIGH with rebound management
   do {
     palWaitPadTimeout(SDLOG_USB_VBUS_PORT, SDLOG_USB_VBUS_PIN, TIME_INFINITE);
