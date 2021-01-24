@@ -309,6 +309,7 @@
 #define STM32_PWM_USE_TIM16                 FALSE
 #define STM32_PWM_USE_TIM17                 FALSE
 
+
 /*
  * RTC driver system settings.
  */
