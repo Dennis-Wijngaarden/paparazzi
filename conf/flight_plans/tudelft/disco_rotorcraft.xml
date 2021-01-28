@@ -1,0 +1,108 @@
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="70" ground_alt="0" lat0="52.168645279691475" lon0="4.415397648202132" max_dist_from_home="1500" name="Basic" security_height="40">
+  <header>
+    #include "subsystems/datalink/datalink.h"
+    #include "autopilot.h"
+  </header>
+  <waypoints>
+    <waypoint name="HOME" x="0" y="0"/>
+    <waypoint name="STDBY" x="49.5" y="100.1"/>
+    <waypoint name="CLIMB" x="-114.5" y="162.3"/>
+    <waypoint name="GF_0" lon="4.410088062286377" lat="52.169681044864824"/>
+    <waypoint name="GF_1" lon="4.414916038513183" lat="52.16256062914609"/>
+    <waypoint name="GF_2" lon="4.42757606506347" lat="52.16600910584492"/>
+    <waypoint name="GF_3" lon="4.423584938049316" lat="52.17324740519626"/>
+    <waypoint name="p_1" lon="4.414122104644775" lat="52.16900985283858"/>
+    <waypoint name="p_2" lon="4.414851665496826" lat="52.1674568599227"/>
+    <waypoint name="p_3" lon="4.4161176681518555" lat="52.16777272727984"/>
+    <waypoint name="p_4" lon="4.415280818939209" lat="52.16906249571636"/>
+  </waypoints>
+  <sectors>
+    <sector color="yellow" name="GeoFence" type="dynamic">
+      <corner name="GF_0"/>
+      <corner name="GF_1"/>
+      <corner name="GF_2"/>
+      <corner name="GF_3"/>
+    </sector>
+  </sectors>
+  <exceptions>
+    <!-- RC loss -->
+    <!--<exception cond="((radio_control.status == RC_REALLY_LOST) &&
+      !(IndexOfBlock('Takeoff') > nav_block) &&
+      !(nav_block == IndexOfBlock('ReturnCenterPointNoThrottle')) &&
+      !(nav_block == IndexOfBlock('Standby')))"
+      deroute="Standby"
+    />-->
+    <!-- Check inside Flight Area, then goto CenterPoint -->
+    <exception cond="Or(!InsideGeoFence(GetPosX(), GetPosY()), GetPosAlt() > GetAltRef() + 90) &&
+      !(IndexOfBlock('Takeoff') > nav_block) &&
+      !(nav_block == IndexOfBlock('ReturnCenterPointNoThrottle'))"
+      deroute="ReturnCenterPointNoThrottle"
+    />
+     <!-- Datalink timeout -->
+     <exception cond="((datalink_time > 22) &&
+      !(nav_block == IndexOfBlock('Wait GPS')) &&
+      !(nav_block == IndexOfBlock('Geo init')) &&
+      !(nav_block == IndexOfBlock('Holding point')) &&
+      !(nav_block == IndexOfBlock('ReturnCenterPointNoThrottle')) &&
+      !(nav_block == IndexOfBlock('Standby')))"
+      deroute="Standby"
+     />
+    <!--exception cond="(datalink_time > 22 &&
+      !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point')) && !(nav_block == IndexOfBlock('ReturnCenterPointNoThrottle'))" deroute="ReturnCenterPointNoThrottle"/-->
+  </exceptions>
+  <blocks>
+    <block name="Wait GPS">
+      <call_once fun="NavKillThrottle()"/>
+      <set value="true" var="force_forward"/>
+      <set value="1" var="autopilot.kill_throttle"/>
+      <while cond="!GpsFixValid()"/>
+    </block>
+    <block name="Geo init">
+      <call_once fun="NavKillThrottle()"/>
+      <set value="true" var="force_forward"/>
+      <while cond="LessThan(NavBlockTime(), 10)"/>
+      <call_once fun="NavSetGroundReferenceHere()"/>
+    </block>
+    <block name="Holding point">
+      <!--set var="nav_mode" value="NAV_MODE_ROLL"/-->
+      <call_once fun="NavKillThrottle()"/>
+      <set value="true" var="force_forward"/>
+      <set value="1" var="autopilot.kill_throttle"/>
+      <attitude roll="0" throttle="0" vmode="throttle"/>
+    </block>
+    <block name="Start Engine">
+      <call_once fun="NavResurrect()"/>
+      <set value="true" var="force_forward"/>
+      <attitude roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+    <block key="t" name="Takeoff" strip_button="Takeoff (wp CLIMB)" strip_icon="takeoff.png" group="home">
+      <exception cond="GetPosAlt() > GetAltRef()+25" deroute="Standby"/>
+      <set value="true" var="force_forward"/>
+      <set value="0" var="autopilot.kill_throttle"/>
+      <set value="0" var="autopilot.flight_time"/>
+      <go from="HOME" throttle="1.0" vmode="throttle" wp="CLIMB" pitch="15"/>
+    </block>
+    <block key="Ctrl+a" name="Standby" strip_button="Standby" strip_icon="home.png" group="home">
+      <set value="true" var="force_forward"/>
+      <circle radius="nav_radius" wp="STDBY"/>
+    </block>
+    <block name="route">
+      <call_once fun="NavResurrect()"/>
+      <set value="true" var="force_forward"/>
+      <go from="p_1" wp="p_2" hmode="route"/>
+      <go from="p_2" wp="p_3" hmode="route"/>
+      <go from="p_3" wp="p_4" hmode="route"/>
+      <go from="p_4" wp="p_1" hmode="route"/>
+      <deroute block="Standby"/>
+    </block>
+    <block name="ReturnCenterPointNoThrottle">
+      <call_once fun="NavKillThrottle()"/>
+      <set value="true" var="force_forward"/>
+      <exception cond="And(InsideGeoFence(GetPosX(), GetPosY()), And(MoreThan(GetPosAlt(), GetAltRef() + 20), LessThan(GetPosAlt(), GetAltRef() + 70)))" deroute="Standby"/>
+      <set value="1" var="autopilot.kill_throttle"/>
+      <circle radius="nav_radius" wp="STDBY" vmode="throttle" throttle="0.0"/>
+    </block>
+  </blocks>
+</flight_plan>
