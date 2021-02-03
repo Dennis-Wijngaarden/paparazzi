@@ -22,7 +22,7 @@
     <module name="telemetry" type="transparent">
       <!--<configure name="MODEM_PORT" value="UART3"/>--><!--  Telem2 on pixhawk4 -->
       <!--<configure name="MODEM_PORT" value="UART7"/>--><!--  DebugUart on pixhawk4 -->
-      <configure name="MODEM_BAUD" value="B115200"/>
+      <configure name="MODEM_BAUD" value="B57600"/>
     </module>
 
     <module name="imu" type="mpu6000">
@@ -151,12 +151,13 @@
 
   <section name="IMU" prefix="IMU_">
     <!-- replace this with your own calibration -->
-    <define name="ACCEL_X_NEUTRAL" value="173"/>
-    <define name="ACCEL_Y_NEUTRAL" value="23"/>
-    <define name="ACCEL_Z_NEUTRAL" value="-22"/>
-    <define name="ACCEL_X_SENS" value="4.676980199549832" integer="16"/>
-    <define name="ACCEL_Y_SENS" value="4.893199149210443" integer="16"/>
-    <define name="ACCEL_Z_SENS" value="4.844131085077024" integer="16"/>
+    <define name="ACCEL_X_NEUTRAL" value="-294"/>
+    <define name="ACCEL_Y_NEUTRAL" value="44"/>
+    <define name="ACCEL_Z_NEUTRAL" value="-12"/>
+    <define name="ACCEL_X_SENS" value="4.591104640971387" integer="16"/>
+    <define name="ACCEL_Y_SENS" value="4.890830945582647" integer="16"/>
+    <define name="ACCEL_Z_SENS" value="4.824469415606894" integer="16"/>
+
 
     <!--Calibrated outside, based on sw/tools/calibration/calibrate.py -s MAG var/logs/16_12_05__16_32_21.data -vp -->
     <define name="MAG_X_NEUTRAL" value="105"/>
@@ -275,7 +276,8 @@
     <!--<define name="VOLTAGE_ADC_SCALE" value="0.006321911f"/>
     <define name="VOLTAGE_OFFSET" value="8.635876361" unit="V"/>
     <define name="VoltageOfAdc(adc)" value="((float)adc * VOLTAGE_ADC_SCALE + VOLTAGE_OFFSET)"/>-->
-    <define name="VoltageOfAdc(adc)" value="((3.3f/4096.0f) * 18.308026444f * adc)"/>
+    <!--<define name="VoltageOfAdc(adc)" value="((3.3f/4096.0f) * 18.308026444f * adc)"/>-->
+    <define name="VoltageOfAdc(adc)" value="16.8f"/>
 
     <define name="MAX_BAT_LEVEL" value="16.8" unit="V"/><!-- 4S lipo 4x4.2 = 12.6 -->
     <define name="LOW_BAT_LEVEL" value="14.4" unit="V"/>

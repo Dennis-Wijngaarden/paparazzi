@@ -58,7 +58,7 @@
   <aircraft
    name="Altura_INDI"
    ac_id="19"
-   airframe="airframes/tudelft/altura_indi.xml"
+   airframe="airframes/tudelft/altura_indi_beun.xml"
    radio="radios/crossfire_sbus.xml"
    telemetry="telemetry/default_rotorcraft.xml"
    flight_plan="flight_plans/rotorcraft_basic.xml"
