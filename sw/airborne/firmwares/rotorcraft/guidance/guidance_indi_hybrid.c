@@ -57,8 +57,8 @@
 #endif
 
 #ifndef GUIDANCE_INDI_POS_GAIN
-#define GUIDANCE_INDI_POS_GAIN = 0.5;
-#define GUIDANCE_INDI_POS_GAINZ = 0.5;
+#define GUIDANCE_INDI_POS_GAIN 0.5
+#define GUIDANCE_INDI_POS_GAINZ 0.5
 #endif
 
 struct guidance_indi_hybrid_params gih_params = {
@@ -133,12 +133,12 @@ float thrust_in;
 
 struct FloatVect3 speed_sp = {0.0, 0.0, 0.0};
 
-void guidance_indi_propagate_filters(void);
+// void guidance_indi_propagate_filters(void);
 static void guidance_indi_calcg_wing(struct FloatMat33 *Gmat);
 static float guidance_indi_get_liftd(float pitch, float theta);
-struct FloatVect3 nav_get_speed_sp_from_go(struct EnuCoor_i target, float pos_gain);
-struct FloatVect3 nav_get_speed_sp_from_line(struct FloatVect2 line_v_enu, struct FloatVect2 to_end_v_enu, struct EnuCoor_i target, float pos_gain);
-struct FloatVect3 nav_get_speed_setpoint(float pos_gain);
+// struct FloatVect3 nav_get_speed_sp_from_go(struct EnuCoor_i target, float pos_gain);
+// struct FloatVect3 nav_get_speed_sp_from_line(struct FloatVect2 line_v_enu, struct FloatVect2 to_end_v_enu, struct EnuCoor_i target, float pos_gain);
+// struct FloatVect3 nav_get_speed_setpoint(float pos_gain);
 
 /**
  * @brief Init function
@@ -504,7 +504,7 @@ float guidance_indi_get_liftd(float airspeed, float theta) {
  * @return desired speed setpoint FloatVect3
  */
 struct FloatVect3 nav_get_speed_setpoint(float pos_gain) {
-  struct FloatVect3 speed_sp;
+  // struct FloatVect3 speed_sp;
   if(horizontal_mode == HORIZONTAL_MODE_ROUTE) {
     speed_sp = nav_get_speed_sp_from_line(line_vect, to_end_vect, navigation_target, pos_gain);
   } else {
