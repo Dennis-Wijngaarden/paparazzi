@@ -42,7 +42,7 @@
     <module name="stabilization" type="indi_simple"/>
     
     <module name="ahrs" type="float_cmpl_quat">
-      <configure name="USE_MAGNETOMETER" value="FALSE"/>
+      <configure name="USE_MAGNETOMETER" value="TRUE"/>
       <define name="AHRS_USE_GPS_HEADING" value="FALSE"/>
       <define name="AHRS_ICQ_MAG_ID" value="MAG_IST8310_SENDER_ID"/>
     </module>
@@ -160,12 +160,13 @@
 
 
     <!--Calibrated outside, based on sw/tools/calibration/calibrate.py -s MAG var/logs/16_12_05__16_32_21.data -vp -->
-    <define name="MAG_X_NEUTRAL" value="105"/>
-    <define name="MAG_Y_NEUTRAL" value="10"/>
-    <define name="MAG_Z_NEUTRAL" value="-23"/>
-    <define name="MAG_X_SENS" value="4.01453293111" integer="16"/>
-    <define name="MAG_Y_SENS" value="3.96379405627" integer="16"/>
-    <define name="MAG_Z_SENS" value="3.92499630895" integer="16"/>
+    <define name="MAG_X_NEUTRAL" value="-7"/>
+    <define name="MAG_Y_NEUTRAL" value="-10"/>
+    <define name="MAG_Z_NEUTRAL" value="-18"/>
+    <define name="MAG_X_SENS" value="12.867389919265843" integer="16"/>
+    <define name="MAG_Y_SENS" value="12.263193997216764" integer="16"/>
+    <define name="MAG_Z_SENS" value="13.710859359226738" integer="16"/>
+
   </section>
 
   <!-- local magnetic field -->
@@ -257,6 +258,7 @@
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
     <!-- Good weather -->
     <define name="MAX_BANK" value="20" unit="deg"/>
+    <define name="REF_MAX_SPEED" value="4" unit="m/s"/>
     <!-- Bad weather -->
     <!-- define name="MAX_BANK" value="32" unit="deg"/ -->
     <define name="PGAIN" value="79"/>
@@ -264,11 +266,16 @@
     <define name="IGAIN" value="30"/>
   </section>
 
+  <section name="NAVIGATION" prefix="NAV_">
+    <define name="CLIMB_VSPEED" value="2.0"/>
+    <define name="DESCEND_VSPEED" value="-1.0"/>
+  </section>
+
   <section name="AUTOPILOT">
     <define name="MODE_STARTUP" value="AP_MODE_ATTITUDE_DIRECT"/>
     <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
-    <define name="MODE_AUTO1" value="AP_MODE_ATTITUDE_DIRECT"/>
-    <define name="MODE_AUTO2" value="AP_MODE_ATTITUDE_DIRECT"/>
+    <define name="MODE_AUTO1" value="AP_MODE_HOVER_Z_HOLD"/>
+    <define name="MODE_AUTO2" value="AP_MODE_NAV"/>
     <define name="NO_RC_THRUST_LIMIT" value="TRUE" />
   </section>
 
