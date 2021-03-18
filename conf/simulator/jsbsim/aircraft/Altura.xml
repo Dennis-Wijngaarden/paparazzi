@@ -115,12 +115,50 @@
     </contact>
   </ground_reactions>
 
-
-
-
-
-
-
+  <flight_control name="actuator_dynamics">
+    <channel name="filtering">
+      <lag_filter name="neu_motor_lag">
+        <input>fcs/neu_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/neu_motor_lag </output>
+      </lag_filter>
+      <lag_filter name="nel_motor_lag">
+        <input>fcs/nel_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/nel_motor_lag </output>
+      </lag_filter>
+      <lag_filter name="seu_motor_lag">
+        <input>fcs/seu_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/seu_motor_lag </output>
+      </lag_filter>
+      <lag_filter name="sel_motor_lag">
+        <input>fcs/sel_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/sel_motor_lag </output>
+      </lag_filter>
+      <lag_filter name="swu_motor_lag">
+        <input>fcs/swu_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/swu_motor_lag </output>
+      </lag_filter>
+      <lag_filter name="swl_motor_lag">
+        <input>fcs/swl_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/swl_motor_lag </output>
+      </lag_filter>
+      <lag_filter name="nwu_motor_lag">
+        <input>fcs/nwu_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/nwu_motor_lag </output>
+      </lag_filter>
+      <lag_filter name="nwl_motor_lag">
+        <input>fcs/nwl_motor</input>
+        <c1> 20.41 </c1>
+        <output> fcs/nwl_motor_lag </output>
+      </lag_filter>
+    </channel>
+  </flight_control>
 
   <external_reactions>
 
@@ -138,7 +176,7 @@
     <force name="neu_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/neu_motor</property>
+          <property>fcs/neu_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -157,7 +195,7 @@
     <force name="nel_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nel_motor</property>
+          <property>fcs/nel_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -176,7 +214,7 @@
     <force name="swu_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/swu_motor</property>
+          <property>fcs/swu_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -195,7 +233,7 @@
     <force name="swl_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/swl_motor</property>
+          <property>fcs/swl_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -214,7 +252,7 @@
     <force name="seu_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/seu_motor</property>
+          <property>fcs/seu_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -233,7 +271,7 @@
     <force name="sel_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/sel_motor</property>
+          <property>fcs/sel_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -252,7 +290,7 @@
     <force name="nwu_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nwu_motor</property>
+          <property>fcs/nwu_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -271,7 +309,7 @@
     <force name="nwl_motor" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nwl_motor</property>
+          <property>fcs/nwl_motor_lag</property>
           <value> 2.205 </value> <!--1 kg-->
         </product>
       </function>
@@ -292,7 +330,7 @@
     <force name="neu_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/neu_motor</property>
+          <property>fcs/neu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -313,7 +351,7 @@
     <force name="neu_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/neu_motor</property>
+          <property>fcs/neu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -332,7 +370,7 @@
     <force name="nel_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nel_motor</property>
+          <property>fcs/nel_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -351,7 +389,7 @@
     <force name="nel_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nel_motor</property>
+          <property>fcs/nel_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -370,7 +408,7 @@
     <force name="seu_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/seu_motor</property>
+          <property>fcs/seu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -389,7 +427,7 @@
     <force name="seu_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/seu_motor</property>
+          <property>fcs/seu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -408,7 +446,7 @@
     <force name="sel_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/sel_motor</property>
+          <property>fcs/sel_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -427,7 +465,7 @@
     <force name="sel_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/sel_motor</property>
+          <property>fcs/sel_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -446,7 +484,7 @@
     <force name="swu_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/swu_motor</property>
+          <property>fcs/swu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -465,7 +503,7 @@
     <force name="swu_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/swu_motor</property>
+          <property>fcs/swu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -484,7 +522,7 @@
     <force name="swl_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/swl_motor</property>
+          <property>fcs/swl_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -503,7 +541,7 @@
     <force name="swl_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/swl_motor</property>
+          <property>fcs/swl_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -522,7 +560,7 @@
     <force name="nwu_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nwu_motor</property>
+          <property>fcs/nwu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -541,7 +579,7 @@
     <force name="nwu_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nwu_motor</property>
+          <property>fcs/nwu_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -560,7 +598,7 @@
     <force name="nwl_couple1" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nwl_motor</property>
+          <property>fcs/nwl_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
@@ -579,7 +617,7 @@
     <force name="nwl_couple2" frame="BODY" unit="LBS">
       <function>
         <product>
-          <property>fcs/nwl_motor</property>
+          <property>fcs/nwl_motor_lag</property>
           <value> 2.205 </value>
         </product>
       </function>
