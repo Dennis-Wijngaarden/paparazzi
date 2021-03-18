@@ -25,6 +25,7 @@
     <module name="airspeed" type="ms45xx_i2c">
       <define name="MS45XX_I2C_DEV" value="i2c1"/>
       <define name="MS45XX_PRESSURE_RANVE" value="0.05"/>
+      <define name="USE_AIRSPEED_MS45XX" value="TRUE"/>
     </module>
     <module name="air_data"/>
     <module name="actuators" type="disco"/>
@@ -36,8 +37,8 @@
       <define name="SENSOR_SYNC_SEND_SONAR"/>
     </module>-->
     <module name="send_imu_mag_current"/>
-    <define name="KNIFE_EDGE_TEST"/>
     <define name="STABILIZATION_ATTITUDE_SP_PSI_DELTA_LIMIT" value="0.001"/>
+    <define name="GUIDANCE_HEADING_IS_FREE" value="FALSE"/> <!--heading can not be set by navigation-->
     <module name="logger_file">
       <define name="FILE_LOGGER_PATH" value="/data/ftp/internal_000"/>
     </module>
@@ -87,6 +88,7 @@
     <define name="NO_RC_THRUST_LIMIT" value="TRUE"/>
     <define name="ROTORCRAFT_COMMANDS_YAW_ALWAYS_ENABLED" value="TRUE"/>
     <define name="VoltageOfAdc(adc)" value="((3.3f/4096.0f) * 12.0877510901 * adc)"/>
+    <!--<define name="USE_AIRSPEED" value="TRUE"/>-->
   </section>
 
   <section name="FORWARD">
@@ -186,9 +188,11 @@
   </section>
 
   <section name="GUIDANCE_INDI_HYBRID" prefix="GUIDANCE_INDI_">
-    <define name="MAX_AIRSPEED" value="15."/>
+    <define name="MAX_AIRSPEED" value="12."/>
     <define name="PITCH_LIFT_EFF" value="0.12"/>
-    <define name="HEADING_BANK_GAIN" value="1."/>
+    <define name="HEADING_BANK_GAIN" value="15."/>
+    <define name="SPECIFIC_FORCE_GAIN" value="-1300."/>
+    <define name="THRUST_DYNAMICS" value="0.04"/>
   </section>
 
   <section name="RADIO" prefix="RADIO_">

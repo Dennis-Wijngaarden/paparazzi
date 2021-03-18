@@ -368,6 +368,7 @@ void guidance_indi_run(float *heading_sp) {
 
 #ifndef KNIFE_EDGE_TEST
   *heading_sp += omega / PERIODIC_FREQUENCY;
+  *heading_sp = stabilization_attitude_get_heading_f();
   FLOAT_ANGLE_NORMALIZE(*heading_sp);
 #endif
 
