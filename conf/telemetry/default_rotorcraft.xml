@@ -201,6 +201,7 @@
       <message name="IMU_MAG_SCALED"           period=".0125"/>
       <message name="LIDAR"                    period="0.05"/>
       <message name="PPM"                      period="0.002"/>
+      <message name="STAB_ATTITUDE_INDI"       period="0.002"/>
     </mode>
   </process>
 
