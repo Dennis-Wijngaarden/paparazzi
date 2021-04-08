@@ -70,13 +70,13 @@
 
     <module name="stabilization" type="indi_simple"/>
     
-    <module name="ahrs" type="float_cmpl_quat">
+    <!--<module name="ahrs" type="float_cmpl_quat">
       <configure name="USE_MAGNETOMETER" value="TRUE"/>
       <define name="AHRS_USE_GPS_HEADING" value="FALSE"/>
       <define name="AHRS_ICQ_MAG_ID" value="MAG_IST8310_SENDER_ID"/>
-    </module>
+    </module>-->
 
-    <module name="ins" type="extended"/>
+    <module name="ins" type="ekf2"/>
 
     <module name="guidance" type="indi">
       <define name="GUIDANCE_INDI_SPECIFIC_FORCE_GAIN" value="-400.0"/>
