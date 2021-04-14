@@ -35,6 +35,10 @@
       <message name="LOGGER_STATUS"            period="5.1"/>
       <message name="LIDAR"                    period="1.2"/>
       <message name="INS_EKF2"                 period=".25"/>
+      <message name="AIRSPEED_MS45XX"          period=".25"/>
+      <message name="GUIDANCE_H_INT"           period=".25"/>
+      <message name="HOVER_LOOP"               period=".25"/>
+      <message name="AHRS_REF_QUAT"            period="0.25"/>
     </mode>
 
     <mode name="ppm">

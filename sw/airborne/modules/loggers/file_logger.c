@@ -68,7 +68,7 @@ static void file_logger_write_header(FILE *file) {
   fprintf(file, "att_phi,att_theta,att_psi,");
   fprintf(file, "rate_p,rate_q,rate_r,");
 #ifdef COMMAND_THRUST
-  fprintf(file, "cmd_thrust,cmd_roll,cmd_pitch,cmd_yaw\n");
+  fprintf(file, "cmd_thrust,cmd_roll,cmd_pitch,cmd_yaw,airspeed,qi,qx,qy,qz,qi_sp,qx_sp,qy_sp,qz_sp\n");
 #else
   fprintf(file, "h_ctl_aileron_setpoint,h_ctl_elevator_setpoint\n");
 #endif
@@ -92,9 +92,11 @@ static void file_logger_write_row(FILE *file) {
   fprintf(file, "%f,%f,%f,", att->phi, att->theta, att->psi);
   fprintf(file, "%f,%f,%f,", rates->p, rates->q, rates->r);
 #ifdef COMMAND_THRUST
-  fprintf(file, "%d,%d,%d,%d\n",
+  fprintf(file, "%d,%d,%d,%d,",
       stabilization_cmd[COMMAND_THRUST], stabilization_cmd[COMMAND_ROLL],
       stabilization_cmd[COMMAND_PITCH], stabilization_cmd[COMMAND_YAW]);
+  fprintf(file, "%f\n",
+      stateGetAirspeed_f());
 #else
   fprintf(file, "%d,%d\n", h_ctl_aileron_setpoint, h_ctl_elevator_setpoint);
 #endif
