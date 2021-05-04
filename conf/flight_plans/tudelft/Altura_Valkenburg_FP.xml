@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
 
-<flight_plan alt="20" ground_alt="0" lat0="52.1681954" lon0="4.4128" max_dist_from_home="500" name="Altura fp Valkenburg" security_height="10">
+<flight_plan alt="60" ground_alt="0" lat0="52.1681954" lon0="4.4128" max_dist_from_home="500" name="Altura fp Valkenburg" security_height="10">
   <header>
     #include "autopilot.h"
     #include "subsystems/datalink/datalink.h"
@@ -8,30 +8,41 @@
 </header>
   <waypoints>
     <waypoint name="HOME" x="0.0" y="0.0"/>
-    <waypoint name="CLIMB" x="0.0" y="5.0"/>
-    <waypoint name="STDBY" x="-2.0" y="-5.0"/>
-    <waypoint name="p1" x="-19.9" y="14.3"/>
-    <waypoint name="p2" x="-0.6" y="21.6"/>
-    <waypoint name="p3" x="22.2" y="-26.5"/>
-    <waypoint name="p4" x="4.9" y="-34.4"/>
-    <waypoint name="TD" x="5.6" y="-10.9"/>
-    <waypoint name="GF1" x="-83.6" y="52.0"/>
-    <waypoint name="GF2" x="-23.7" y="-104.1"/>
-    <waypoint name="GF3" x="220.6" y="-37.4"/>
-    <waypoint name="GF4" x="119.1" y="94.7"/>
+    <waypoint name="CLIMB" x="56.8" y="24.0"/>
+    <waypoint name="STDBY" x="37.4" y="16.3"/>
+    <waypoint name="p1" x="31.4" y="62.0"/>
+    <waypoint name="p2" x="83.8" y="79.2"/>
+    <waypoint name="p3" x="111.4" y="6.8"/>
+    <waypoint name="p4" x="52.8" y="-5.5"/>
+    <waypoint name="TD" x="42.6" y="34.7"/>
+    <waypoint name="HGF1" x="-331.6" y="164.1"/>
+    <waypoint name="HGF2" x="44.6" y="-449.3"/>
+    <waypoint name="HGF3" x="478.2" y="-140.1"/>
+    <waypoint name="HGF4" x="288.8" y="315.0"/>
+    <waypoint name="SGF1" x="-251.1" y="129.8"/>
+    <waypoint name="SGF2" x="44.6" y="-409.1"/>
+    <waypoint name="SGF3" x="408.2" y="-135.3"/>
+    <waypoint name="SGF4" x="273.8" y="264.1"/>
   </waypoints>
   <sectors>
-    <sector color="red" name="Geofence" type="dynamic">
-      <corner name="GF1"/>
-      <corner name="GF2"/>
-      <corner name="GF3"/>
-      <corner name="GF4"/>
+    <sector color="red" name="HardGeofence" type="dynamic">
+      <corner name="HGF1"/>
+      <corner name="HGF2"/>
+      <corner name="HGF3"/>
+      <corner name="HGF4"/>
+    </sector>
+    <sector color="yellow" name="SoftGeofence" type="dynamic">
+      <corner name="SGF1"/>
+      <corner name="SGF2"/>
+      <corner name="SGF3"/>
+      <corner name="SGF4"/>
     </sector>
   </sectors>
   <exceptions>
-    <exception cond="Or(!InsideGeofence(GetPosX(), GetPosY()), GetPosAlt() > GetAltRef() + 1500) && !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point'))" deroute="Holding point"/>
-    <exception cond="datalink_time > 25 && !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point')) && !(nav_block == IndexOfBlock('Standby'))" deroute="Standby"/>
-    <!--<exception cond="radio_control.status == RC_REALLY_LOST && !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point')) && !(nav_block == IndexOfBlock('Standby'))" deroute="Standby"/>-->
+    <exception cond="Or(!InsideHardGeofence(GetPosX(), GetPosY()), GetPosAlt() > GetAltRef() + 100) && !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point'))" deroute="Holding point"/>
+    <exception cond="Or(!InsideSoftGeofence(GetPosX(), GetPosY()), GetPosAlt() > GetAltRef() + 100) && !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point'))" deroute="Standby"/>
+    <exception cond="And(radio_control.status == RC_REALLY_LOST, datalink_time > 25) && !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point'))" deroute="Holding point"/>
+    <exception cond="datalink_time > 20 && !(nav_block == IndexOfBlock('Wait GPS')) && !(nav_block == IndexOfBlock('Geo init')) && !(nav_block == IndexOfBlock('Holding point')) && !(nav_block == IndexOfBlock('Standby'))" deroute="Standby"/>
   </exceptions>
   <blocks>
     <block name="Wait GPS">
@@ -56,7 +67,7 @@
       <stay climb="nav_climb_vspeed" vmode="climb" wp="CLIMB"/>
     </block>
     <block name="Standby" strip_button="Standby" strip_icon="home.png">
-      <stay wp="STDBY"/> 
+      <stay wp="STDBY"/>
     </block>
     <block name="stay_p1">
       <stay wp="p1"/>
@@ -67,7 +78,7 @@
     </block>
     <block name="line_p1_p2">
       <go from="p1" hmode="route" wp="p2"/>
-      <stay wp="p2" until="stage_time>10"/>
+      <stay until="stage_time>10" wp="p2"/>
       <go from="p2" hmode="route" wp="p1"/>
       <deroute block="stay_p1"/>
     </block>
@@ -85,13 +96,10 @@
       <go wp="TD"/>
     </block>
     <block name="flare">
-      <exception cond="NavDetectGround()" deroute="Holding point"/>
-      <exception cond="!nav_is_in_flight()" deroute="landed"/>
-      <call_once fun="NavStartDetectGround()"/>
       <stay climb="-0.4" vmode="climb" wp="TD"/>
     </block>
     <block name="landed">
-      <attitude pitch="0" roll="0" throttle="0" vmode="throttle" until="FALSE"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
     </block>
   </blocks>
 </flight_plan>
