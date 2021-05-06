@@ -61,6 +61,9 @@
       <define name="IMU_MPU_X_SIGN" value="+1"/>
       <define name="IMU_MPU_Y_SIGN" value="+1"/>
       <define name="IMU_MPU_Z_SIGN" value="-1"/>
+      <define name="IMU_MPU_LOWPASS_FILTER" value="MPU60X0_DLPF_42HZ"/>
+      <define name="IMU_MPU_SMPLRT_DIV" value="0"/>
+      <define name="IMU_MPU_ACCEL_LOWPASS_FILTER" value="MPU60X0_DLPF_ACC_44HZ"/>
     </module>
 
     <module name="gps" type="ublox" >
@@ -77,8 +80,10 @@
     </module>-->
 
     <module name="ins" type="ekf2"/>
+    <!--<module name="logger_ins_analyser"/>-->
 
     <module name="guidance" type="indi">
+      <define name="GUIDANCE_INDI_FILTER_CUTOFF" value="1.0"/>
       <define name="GUIDANCE_INDI_SPECIFIC_FORCE_GAIN" value="-400.0"/>
       <define name="GUIDANCE_INDI_POS_GAIN" value="0.2"/>
       <define name="GUIDANCE_INDI_SPEED_GAIN" value="1.0"/>
@@ -184,13 +189,12 @@
 
 
     <!--Calibrated outside, based on sw/tools/calibration/calibrate.py -s MAG var/logs/16_12_05__16_32_21.data -vp -->
-    <define name="MAG_X_NEUTRAL" value="-8"/>
-    <define name="MAG_Y_NEUTRAL" value="-7"/>
-    <define name="MAG_Z_NEUTRAL" value="-19"/>
-    <define name="MAG_X_SENS" value="12.908329383296405" integer="16"/>
-    <define name="MAG_Y_SENS" value="12.374684774536087" integer="16"/>
-    <define name="MAG_Z_SENS" value="13.617768267666177" integer="16"/>
-
+    <define name="MAG_X_NEUTRAL" value="-5"/>
+    <define name="MAG_Y_NEUTRAL" value="-18"/>
+    <define name="MAG_Z_NEUTRAL" value="-9"/>
+    <define name="MAG_X_SENS" value="12.564703608820938" integer="16"/>
+    <define name="MAG_Y_SENS" value="12.873199189575105" integer="16"/>
+    <define name="MAG_Z_SENS" value="13.31088565961852" integer="16"/>
   </section>
 
   <!-- local magnetic field -->
