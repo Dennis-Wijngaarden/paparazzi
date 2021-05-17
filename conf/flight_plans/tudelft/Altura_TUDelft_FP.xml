@@ -25,13 +25,13 @@
     <waypoint name="SGF4" x="3.4" y="52.7"/>
   </waypoints>
   <sectors>
-    <sector color="red" name="HardGeofence" type="dynamic">
+    <sector color="red" name="HardGeofence">
       <corner name="HGF1"/>
       <corner name="HGF2"/>
       <corner name="HGF3"/>
       <corner name="HGF4"/>
     </sector>
-    <sector color="yellow" name="SoftGeofence" type="dynamic">
+    <sector color="yellow" name="SoftGeofence">
       <corner name="SGF1"/>
       <corner name="SGF2"/>
       <corner name="SGF3"/>

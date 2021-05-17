@@ -67,17 +67,6 @@
    gui_color="#ffffffffffff"
   />
   <aircraft
-   name="Altura_PID"
-   ac_id="14"
-   airframe="airframes/tudelft/altura_pid_beun.xml"
-   radio="radios/crossfire_sbus.xml"
-   telemetry="telemetry/default_rotorcraft.xml"
-   flight_plan="flight_plans/rotorcraft_basic.xml"
-   settings="settings/rotorcraft_basic.xml"
-   gui_color="blue"
-   settings_modules="modules/ahrs_float_cmpl_quat.xml modules/geo_mag.xml modules/gps.xml modules/gps_ubx_ucenter.xml modules/guidance_rotorcraft.xml modules/imu_common.xml modules/ins_extended.xml modules/nav_basic_rotorcraft.xml modules/stabilization_int_quat.xml"
-  />
-  <aircraft
    name="BebopMavlink"
    ac_id="9"
    airframe="airframes/tudelft/bebop_mavlink.xml"
