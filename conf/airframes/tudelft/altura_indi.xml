@@ -1,5 +1,3 @@
-<!DOCTYPE airframe SYSTEM "../airframe.dtd">
-
 <!-- This is a Octocopter Coaxial frame equiped with 
   * Autopilot:  Pixhawk 4
   * IMU:        MPU6000
@@ -12,12 +10,41 @@
   <description>Altura flying PID</description>
   <firmware name="rotorcraft">
 
-    <target name="ap" board="px4fmu_5.0_chibios"/>
+    <target name="ap" board="px4fmu_5.0_chibios">
+      <configure name="PERIODIC_FREQUENCY" value="500"/> <!-- unit="Hz"-->
+
+      <module name="radio_control" type="sbus">
+        <define name="RADIO_KILL_SWITCH" value="RADIO_AUX1"/>
+        <configure name="SBUS_PORT" value="UART3"/>
+      </module>
+
+      <!-- Logger -->
+      <module name="tlsf"/>
+      <module name="pprzlog"/>
+      <module name="logger" type="sd_chibios"/>
+      <module name="flight_recorder"/>
+
+      <define name="STABILIZATION_INDI_G2_R" value="0.00035358"/>
+    </target>
+
+    <target name="nps" board="pc">
+      <module name="radio_control" type="datalink"/>
+      <module name="fdm" type="jsbsim"/>
+
+      <!--Not dealing with these in the simulation-->
+      <define name="RADIO_TH_HOLD"     value="0"/> <!-- Throttle hold in command laws -->
+      <define name="RADIO_FMODE"       value="0"/> <!-- Throttle curve select -->
+      <define name="RADIO_FBW_MODE"    value="0"/> <!-- Switch between AP and FBW control -->
+      <define name="RADIO_FLAPS"       value="0"/> <!-- Flaps control -->
+      <define name="RADIO_KILL_SWITCH" value="0"/>
+
+      <define name="STABILIZATION_INDI_G2_R" value="0.0"/>
+    </target>
 
     <define name="BAT_CHECKER_DELAY" value="80" />
     <define name="CATASTROPHIC_BATTERY_KILL_DELAY" value="80" />
 
-    <configure name="PERIODIC_FREQUENCY" value="500"/> <!-- unit="Hz"-->
+    <define name="NO_GPS_LOST_WITH_RC_VALID" value="TRUE"/>
 
     <module name="telemetry" type="transparent">
       <!--<configure name="MODEM_PORT" value="UART3"/>--><!--  Telem2 on pixhawk4 -->
@@ -32,6 +59,9 @@
       <define name="IMU_MPU_X_SIGN" value="+1"/>
       <define name="IMU_MPU_Y_SIGN" value="+1"/>
       <define name="IMU_MPU_Z_SIGN" value="-1"/>
+      <define name="IMU_MPU_LOWPASS_FILTER" value="MPU60X0_DLPF_42HZ"/>
+      <define name="IMU_MPU_SMPLRT_DIV" value="0"/>
+      <define name="IMU_MPU_ACCEL_LOWPASS_FILTER" value="MPU60X0_DLPF_ACC_44HZ"/>
     </module>
 
     <module name="gps" type="ublox" >
@@ -41,21 +71,24 @@
 
     <module name="stabilization" type="indi_simple"/>
     
-    <module name="ahrs" type="float_cmpl_quat">
-      <configure name="USE_MAGNETOMETER" value="FALSE"/>
+    <!--<module name="ahrs" type="float_cmpl_quat">
+      <configure name="USE_MAGNETOMETER" value="TRUE"/>
       <define name="AHRS_USE_GPS_HEADING" value="FALSE"/>
       <define name="AHRS_ICQ_MAG_ID" value="MAG_IST8310_SENDER_ID"/>
-    </module>
+    </module>-->
 
-    <module name="ins" type="extended"/>
+    <module name="ins" type="ekf2"/>
+    <!--<module name="logger_ins_analyser"/>-->
+
+    <module name="guidance" type="indi">
+      <define name="GUIDANCE_INDI_FILTER_CUTOFF" value="1.0"/>
+      <define name="GUIDANCE_INDI_SPECIFIC_FORCE_GAIN" value="-400.0"/>
+      <define name="GUIDANCE_INDI_POS_GAIN" value="0.2"/>
+      <define name="GUIDANCE_INDI_SPEED_GAIN" value="1.0"/>
+    </module>
 
     <module name="current_sensor">
       <configure name="ADC_CURRENT_SENSOR" value="ADC_2" />
-    </module>
-
-    <module name="radio_control" type="sbus">
-      <define name="RADIO_KILL_SWITCH" value="RADIO_AUX1"/>
-      <configure name="SBUS_PORT" value="UART3"/>
     </module>
 
     <module name="geo_mag"/>
@@ -82,12 +115,6 @@
       <define name="SERVO_HZ" value="400"/>
     </module>
 
-    <!-- Logger -->
-    <module name="tlsf"/>
-    <module name="pprzlog"/>
-    <module name="logger" type="sd_chibios"/>
-    <module name="flight_recorder"/>
-
     <!-- To get the signs (and channels) right, show a realtime plot scaled IMU_MAG mx, my, mz then:
     - [x] When you align your IMU with the direction of north, you should see x>0, y=~0, z>0.
     - [x] When pitching the IMU down, the magnetic vector is aligning with x,
@@ -113,14 +140,14 @@
   </rc_commands>
 
   <servos driver="Default">
-    <servo name="MOTOR_0" no="0" min="900" neutral="1100" max="2000"/>
-    <servo name="MOTOR_1" no="1" min="900" neutral="1100" max="2000"/>
-    <servo name="MOTOR_2" no="2" min="900" neutral="1100" max="2000"/>
-    <servo name="MOTOR_3" no="3" min="900" neutral="1100" max="2000"/>
-    <servo name="MOTOR_4" no="4" min="900" neutral="1100" max="2000"/>
-    <servo name="MOTOR_5" no="5" min="900" neutral="1100" max="2000"/>
-    <servo name="MOTOR_6" no="6" min="900" neutral="1100" max="2000"/>
-    <servo name="MOTOR_7" no="7" min="900" neutral="1100" max="2000"/>
+    <servo name="MOTOR_0" no="0" min="1000" neutral="1100" max="2000"/>
+    <servo name="MOTOR_1" no="1" min="1000" neutral="1100" max="2000"/>
+    <servo name="MOTOR_2" no="2" min="1000" neutral="1100" max="2000"/>
+    <servo name="MOTOR_3" no="3" min="1000" neutral="1100" max="2000"/>
+    <servo name="MOTOR_4" no="4" min="1000" neutral="1100" max="2000"/>
+    <servo name="MOTOR_5" no="5" min="1000" neutral="1100" max="2000"/>
+    <servo name="MOTOR_6" no="6" min="1000" neutral="1100" max="2000"/>
+    <servo name="MOTOR_7" no="7" min="1000" neutral="1100" max="2000"/>
   </servos>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
@@ -159,12 +186,13 @@
     <define name="ACCEL_Z_SENS" value="4.844131085077024" integer="16"/>
 
     <!--Calibrated outside, based on sw/tools/calibration/calibrate.py -s MAG var/logs/16_12_05__16_32_21.data -vp -->
-    <define name="MAG_X_NEUTRAL" value="105"/>
-    <define name="MAG_Y_NEUTRAL" value="10"/>
-    <define name="MAG_Z_NEUTRAL" value="-23"/>
-    <define name="MAG_X_SENS" value="4.01453293111" integer="16"/>
-    <define name="MAG_Y_SENS" value="3.96379405627" integer="16"/>
-    <define name="MAG_Z_SENS" value="3.92499630895" integer="16"/>
+    <define name="MAG_X_NEUTRAL" value="-4"/>
+    <define name="MAG_Y_NEUTRAL" value="-19"/>
+    <define name="MAG_Z_NEUTRAL" value="-4"/>
+    <define name="MAG_X_SENS" value="13.219468679039807" integer="16"/>
+    <define name="MAG_Y_SENS" value="13.45687774466291" integer="16"/>
+    <define name="MAG_Z_SENS" value="14.376826048220817" integer="16"/>
+
   </section>
 
   <!-- local magnetic field -->
@@ -215,14 +243,14 @@
     <define name="G1_P" value="0.0252103"/>
     <define name="G1_Q" value="0.025197769"/>
     <define name="G1_R" value="0.00184484"/>
-    <define name="G2_R" value="0.00035358"/>
+    <!--<define name="G2_R" value="0.00035358"/>--> <!--Defined in target definition-->
 
     <!-- reference acceleration for attitude control -->
-    <define name="REF_ERR_P" value="175.0"/>
-    <define name="REF_ERR_Q" value="175.0"/>
+    <define name="REF_ERR_P" value="100.0"/>
+    <define name="REF_ERR_Q" value="100.0"/>
     <define name="REF_ERR_R" value="20.0"/>
-    <define name="REF_RATE_P" value="15.5"/>
-    <define name="REF_RATE_Q" value="15.5"/>
+    <define name="REF_RATE_P" value="10.0"/>
+    <define name="REF_RATE_Q" value="10.0"/>
     <define name="REF_RATE_R" value="5.0"/>
 
     <!--Maxium yaw rate, to avoid instability-->
@@ -249,13 +277,18 @@
     <define name="HOVER_KP" value="283"/>
     <define name="HOVER_KD" value="82"/>
     <define name="HOVER_KI" value="13"/>
-    <define name="NOMINAL_HOVER_THROTTLE" value="0.655"/>
+    <define name="NOMINAL_HOVER_THROTTLE" value="0.5"/>
     <define name="ADAPT_THROTTLE_ENABLED" value="TRUE"/>
+
+    <!--<define name="REF_MAX_Z_DIFF" value="2.0"/>-->
+    <define name="REF_MIN_ZD" value="-1.0"/>
+    <define name="REF_MAX_ZD" value="1.0"/>
   </section>
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
     <!-- Good weather -->
     <define name="MAX_BANK" value="20" unit="deg"/>
+    <define name="REF_MAX_SPEED" value="4" unit="m/s"/>
     <!-- Bad weather -->
     <!-- define name="MAX_BANK" value="32" unit="deg"/ -->
     <define name="PGAIN" value="79"/>
@@ -263,27 +296,39 @@
     <define name="IGAIN" value="30"/>
   </section>
 
+  <section name="NAVIGATION" prefix="NAV_">
+    <define name="CLIMB_VSPEED" value="2.0"/>
+    <define name="DESCEND_VSPEED" value="-1.0"/>
+  </section>
+
+  <section name="SIMULATOR" prefix="NPS_">
+    <define name="ACTUATOR_NAMES" value="neu_motor,nwu_motor,swu_motor,seu_motor,nwl_motor,nel_motor,sel_motor,swl_motor" type="string[]"/>
+    <define name="JSBSIM_MODEL" value="Altura" type="string"/>
+    <define name="SENSORS_PARAMS" value="nps_sensors_params_default.h" type="string"/>
+  </section>
+
   <section name="AUTOPILOT">
     <define name="MODE_STARTUP" value="AP_MODE_ATTITUDE_DIRECT"/>
     <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
-    <define name="MODE_AUTO1" value="AP_MODE_ATTITUDE_DIRECT"/>
-    <define name="MODE_AUTO2" value="AP_MODE_ATTITUDE_DIRECT"/>
+    <define name="MODE_AUTO1" value="AP_MODE_HOVER_Z_HOLD"/> <!--"AP_MODE_HOVER_Z_HOLD"-->
+    <define name="MODE_AUTO2" value="AP_MODE_NAV"/> <!--"AP_MODE_NAV"-->
     <define name="NO_RC_THRUST_LIMIT" value="TRUE" />
   </section>
 
   <section name="BAT">
-    <!--<define name="VOLTAGE_ADC_SCALE" value="0.006321911f"/>
-    <define name="VOLTAGE_OFFSET" value="8.635876361" unit="V"/>
-    <define name="VoltageOfAdc(adc)" value="((float)adc * VOLTAGE_ADC_SCALE + VOLTAGE_OFFSET)"/>-->
-    <define name="VoltageOfAdc(adc)" value="((3.3f/4096.0f) * 18.308026444f * adc)"/>
+    <define name="VOLTAGE_ADC_SCALE" value="0.014237288f"/>
+    <define name="VOLTAGE_OFFSET" value="0.925423729" unit="V"/>
+    <define name="VoltageOfAdc(adc)" value="((float)adc * VOLTAGE_ADC_SCALE + VOLTAGE_OFFSET)"/>
+    <!--<define name="VoltageOfAdc(adc)" value="((3.3f/4096.0f) * 18.308026444f * adc)"/>-->
+    <!--<define name="VoltageOfAdc(adc)" value="16.8f"/>-->
 
     <define name="MAX_BAT_LEVEL" value="16.8" unit="V"/><!-- 4S lipo 4x4.2 = 12.6 -->
     <define name="LOW_BAT_LEVEL" value="14.4" unit="V"/>
     <define name="CRITIC_BAT_LEVEL" value="13.87" unit="V"/>
     <define name="CATASTROPHIC_BAT_LEVEL" value="12.4" unit="V"/>
 
-    <!-- Measured:15.21 Shown:1039.895-->
-    <!-- Measured:15.18 Shown:1035.149599454-->
+    <!-- Measured:16.8 Shown:1115-->
+    <!-- Measured:12.6 Shown:820-->
     
   </section>
 
