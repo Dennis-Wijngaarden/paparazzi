@@ -1,7 +1,5 @@
-(*
- * Support for obtaining google maps api information at runtime
- *
- * Copyright (C) 2011 Stephen Dwyer
+/*
+ * Copyright (C) 2017 Ewoud Smeur <ewoud_smeur@msn.com>
  *
  * This file is part of paparazzi.
  *
@@ -19,17 +17,29 @@
  * along with paparazzi; see the file COPYING.  If not, write to
  * the Free Software Foundation, 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- *
- *)
-let home = Env.paparazzi_home
-let (//) = Filename.concat
-let maps_xml_path = home // "conf" // "maps.xml"
-let maps_xml_default_path = home // "conf" // "maps_example.xml"
+ */
 
-let maps_xml = ExtXml.parse_file maps_xml_path
-let maps_xml_default = ExtXml.parse_file (maps_xml_default_path)
-let gv = try Some (ExtXml.int_attrib maps_xml "google_version") with _ -> None
-let gv_default = try ExtXml.int_attrib maps_xml_default "google_version" with _ -> 0
+/**
+ * @file modules/ctrl/scheduling_indi_simple.h
+ */
 
-let google_version = match gv with Some v -> v | None -> gv_default
+#ifndef SCHEDULING_INDI_SIMPLE_H
+#define SCHEDULING_INDI_SIMPLE_H
+
+#include "generated/airframe.h"
+#include "firmwares/rotorcraft/stabilization/stabilization_indi_simple.h"
+
+extern int32_t use_scheduling;
+
+/**
+ * Initialises periodic loop;
+ */
+extern void ctrl_eff_scheduling_init(void);
+
+/**
+ * Periodic function that interpolates between gain sets depending on the scheduling variable.
+ */
+extern void ctrl_eff_scheduling_periodic(void);
+
+#endif  /* SCHEDULING_INDI_SIMPLE_H */
 
