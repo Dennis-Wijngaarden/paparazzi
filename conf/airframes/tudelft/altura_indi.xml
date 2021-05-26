@@ -258,7 +258,7 @@
 
     <!-- second order filter parameters -->
     <define name="FILT_CUTOFF" value="5.0"/>
-    <define name="FILT_CUTOFF_R" value="2.5"/>
+    <define name="FILT_CUTOFF_RDOT" value="2.5"/>
     <define name="ESTIMATION_FILT_CUTOFF" value="5.0"/>
 
     <define name="FILTER_YAW_RATE" value="TRUE"/>
@@ -281,8 +281,8 @@
     <define name="ADAPT_THROTTLE_ENABLED" value="TRUE"/>
 
     <!--<define name="REF_MAX_Z_DIFF" value="2.0"/>-->
-    <define name="REF_MIN_ZD" value="-1.0"/>
-    <define name="REF_MAX_ZD" value="1.0"/>
+    <define name="REF_MIN_ZD" value="-2.0"/>
+    <define name="REF_MAX_ZD" value="2.0"/>
   </section>
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
