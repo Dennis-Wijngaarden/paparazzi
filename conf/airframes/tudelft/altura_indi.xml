@@ -277,12 +277,12 @@
     <define name="HOVER_KP" value="283"/>
     <define name="HOVER_KD" value="82"/>
     <define name="HOVER_KI" value="13"/>
-    <define name="NOMINAL_HOVER_THROTTLE" value="0.5"/>
+    <define name="NOMINAL_HOVER_THROTTLE" value="0.45"/>
     <define name="ADAPT_THROTTLE_ENABLED" value="TRUE"/>
 
     <!--<define name="REF_MAX_Z_DIFF" value="2.0"/>-->
-    <define name="REF_MIN_ZD" value="-2.0"/>
-    <define name="REF_MAX_ZD" value="2.0"/>
+    <define name="REF_MIN_ZD" value="-2.0"/> <!--climb-->
+    <define name="REF_MAX_ZD" value="1.0"/> <!--descend-->
   </section>
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
