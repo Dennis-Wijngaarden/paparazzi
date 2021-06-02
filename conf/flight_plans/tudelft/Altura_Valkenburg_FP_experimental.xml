@@ -10,10 +10,14 @@
     <waypoint name="HOME" x="0.0" y="0.0"/>
     <waypoint name="CLIMB" x="56.8" y="24.0"/>
     <waypoint name="STDBY" x="37.4" y="16.3"/>
-    <waypoint name="p1" x="31.4" y="62.0"/>
-    <waypoint name="p2" x="83.8" y="79.2"/>
-    <waypoint name="p3" x="111.4" y="6.8"/>
-    <waypoint name="p4" x="52.8" y="-5.5"/>
+    <waypoint name="p1" x="12.6" y="48.7"/>
+    <waypoint name="p2" x="25.0" y="32.6"/>
+    <waypoint name="p3" x="36.5" y="40.5"/>
+    <waypoint name="p4" x="51.1" y="32.5"/>
+    <waypoint name="p5" x="56.7" y="12.3"/>
+    <waypoint name="p6" x="71.7" y="0.0"/>
+    <waypoint name="p7" x="49.0" y="-9.1"/>
+    <waypoint name="p8" x="29.0" y="4.3"/>
     <waypoint name="TD" x="42.6" y="34.7"/>
     <waypoint name="HGF1" x="-331.6" y="164.1"/>
     <waypoint name="HGF2" x="44.6" y="-449.3"/>
@@ -64,7 +68,7 @@
     <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
       <exception cond="stateGetPositionEnu_f()->z > 10.0" deroute="Standby"/>
       <call_once fun="NavSetWaypointHere(WP_CLIMB)"/>
-      <stay wp="CLIMB"/>
+      <stay climb="4.0" vmode="climb" wp="CLIMB"/>
     </block>
     <block name="Standby" strip_button="Standby" strip_icon="home.png">
       <stay wp="STDBY"/>
@@ -86,8 +90,11 @@
       <go from="p1" hmode="route" wp="p2"/>
       <go from="p2" hmode="route" wp="p3"/>
       <go from="p3" hmode="route" wp="p4"/>
-      <go from="p4" hmode="route" wp="p1"/>
-      <deroute block="stay_p1"/>
+      <go from="p4" hmode="route" wp="p5"/>
+      <go from="p5" hmode="route" wp="p6"/>
+      <go from="p6" hmode="route" wp="p7"/>
+      <go from="p7" hmode="route" wp="p8"/>
+      <deroute block="Standby"/>
     </block>
     <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call_once fun="NavSetWaypointHere(WP_TD)"/>
