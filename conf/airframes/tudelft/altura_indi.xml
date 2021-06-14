@@ -104,9 +104,13 @@
       <define name="HMC58XX_CHAN_Z_SIGN" value="-"/>
     </module>-->
     <!-- Magenetometer in external GPS module-->
-    <module name="mag_ist8310">
-      <define name="MODULE_IST8310_UPDATE_AHRS" value="TRUE"/>
-      <configure name="MAG_IST8310_I2C_DEV" value="I2C1"/>
+    <module name="mag_lis3mdl">
+      <define name="MODULE_LIS3MDL_UPDATE_AHRS" value="TRUE"/>
+      <configure name="MAG_LIS3MDL_I2C_DEV" value="I2C1"/>
+    </module>
+
+    <module name="lidar_lite">
+        <configure name="LIDAR_LITE_I2C_DEV" value="I2C4"/>
     </module>
 
     <module name="motor_mixing"/>
