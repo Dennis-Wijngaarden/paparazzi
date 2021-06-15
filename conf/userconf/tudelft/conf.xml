@@ -61,7 +61,7 @@
    airframe="airframes/tudelft/altura_indi.xml"
    radio="radios/crossfire_sbus.xml"
    telemetry="telemetry/default_rotorcraft.xml"
-   flight_plan="flight_plans/tudelft/Altura_Valkenburg_FP_experimental.xml"
+   flight_plan="flight_plans/tudelft/Altura_TUDelft_FP.xml"
    settings="settings/rotorcraft_basic.xml"
    settings_modules="modules/geo_mag.xml modules/gps.xml modules/gps_ubx_ucenter.xml modules/guidance_indi.xml modules/guidance_rotorcraft.xml modules/imu_common.xml modules/ins_ekf2.xml modules/lidar_lite.xml modules/nav_basic_rotorcraft.xml modules/stabilization_indi_simple.xml"
    gui_color="#ffffffffffff"

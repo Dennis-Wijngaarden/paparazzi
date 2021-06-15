@@ -107,6 +107,9 @@
     <module name="mag_lis3mdl">
       <define name="MODULE_LIS3MDL_UPDATE_AHRS" value="TRUE"/>
       <configure name="MAG_LIS3MDL_I2C_DEV" value="I2C1"/>
+      <define name="LIS3MDL_CHAN_X_SIGN" value="-"/>
+      <define name="LIS3MDL_CHAN_Y_SIGN" value="+"/>
+      <define name="LIS3MDL_CHAN_Z_SIGN" value="-"/>
     </module>
 
     <module name="lidar_lite">
@@ -189,13 +192,15 @@
     <define name="ACCEL_Y_SENS" value="4.893199149210443" integer="16"/>
     <define name="ACCEL_Z_SENS" value="4.844131085077024" integer="16"/>
 
-    <!--Calibrated outside, based on sw/tools/calibration/calibrate.py -s MAG var/logs/16_12_05__16_32_21.data -vp -->
-    <define name="MAG_X_NEUTRAL" value="-4"/>
-    <define name="MAG_Y_NEUTRAL" value="-19"/>
-    <define name="MAG_Z_NEUTRAL" value="-4"/>
-    <define name="MAG_X_SENS" value="13.219468679039807" integer="16"/>
-    <define name="MAG_Y_SENS" value="13.45687774466291" integer="16"/>
-    <define name="MAG_Z_SENS" value="14.376826048220817" integer="16"/>
+    <!--Calibrated outside, based on sw/tools/calibration/calibrate.py -s MAG var/logs/21_06_15__14_29_56.data -vp -->
+
+    <define name="MAG_X_NEUTRAL" value="1196"/>
+    <define name="MAG_Y_NEUTRAL" value="-184"/>
+    <define name="MAG_Z_NEUTRAL" value="-3894"/>
+    <define name="MAG_X_SENS" value="0.601698442980722" integer="16"/>
+    <define name="MAG_Y_SENS" value="0.6048826474825565" integer="16"/>
+    <define name="MAG_Z_SENS" value="0.622992436721427" integer="16"/>
+
 
   </section>
 
@@ -334,6 +339,11 @@
     <!-- Measured:16.8 Shown:1115-->
     <!-- Measured:12.6 Shown:820-->
     
+  </section>
+
+  <section name="GCS">
+    <!--<define name="SPEECH_NAME" value="Bebop"/>Not for multiple-->
+    <define name="AC_ICON"             value="quadrotor_xi"/>
   </section>
 
 </airframe>
