@@ -77,7 +77,9 @@
       <define name="AHRS_ICQ_MAG_ID" value="MAG_IST8310_SENDER_ID"/>
     </module>-->
 
-    <module name="ins" type="ekf2"/>
+    <module name="ins" type="ekf2">
+      <define name="INS_SONAR_MAX_RANGE" value="40.0"/>
+    </module>
     <!--<module name="logger_ins_analyser"/>-->
 
     <module name="guidance" type="indi">
