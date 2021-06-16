@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
 
-<flight_plan alt="50" ground_alt="0" lat0="52.1681954" lon0="4.4128" max_dist_from_home="500" name="Altura fp Valkenburg" security_height="10">
+<flight_plan alt="40" ground_alt="0" lat0="52.1681954" lon0="4.4128" max_dist_from_home="500" name="Altura fp Valkenburg" security_height="10">
   <header>
     #include "autopilot.h"
     #include "subsystems/datalink/datalink.h"
@@ -96,6 +96,17 @@
       <go from="p7" hmode="route" wp="p8"/>
       <deroute block="Standby"/>
     </block>
+    <block name="go_route">
+      <go wp="p1"/>
+      <go wp="p2"/>
+      <go wp="p3"/>
+      <go wp="p4"/>
+      <go wp="p5"/>
+      <go wp="p6"/>
+      <go wp="p7"/>
+      <go wp="p8"/>
+      <deroute block="Standby"/>
+    </block>
     <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call_once fun="NavSetWaypointHere(WP_TD)"/>
     </block>
@@ -107,6 +118,13 @@
       <stay climb="-1.5" vmode="climb" wp="TD"/>
     </block>
     <block name="flare">
+      <stay climb="-0.4" vmode="climb" wp="TD"/>
+      <exception cond="!(stateGetPositionEnu_f()->z > 2.0)" deroute="flare_low"/>
+    </block>
+    <block name="flare_low">
+      <exception cond="NavDetectGround()" deroute="Holding point"/>
+      <exception cond="!nav_is_in_flight()" deroute="landed"/>
+      <call_once fun="NavStartDetectGround()"/>
       <stay climb="-0.4" vmode="climb" wp="TD"/>
     </block>
     <block name="landed">
